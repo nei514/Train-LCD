@@ -28,13 +28,13 @@ button{flex:1 1 auto}
 button:active{transform:scale(.98)}
 select{width:100%}
 .lbl{font-size:13px;color:var(--sub);flex:1 1 100%}
+.s{display:none}
 #stat{font-size:13px;color:var(--sub)}
 #dst{font-size:15px;font-weight:500}
 .ann{font-size:15px;line-height:1.7}
 .ann>div+div{margin-top:4px}
 textarea{width:100%;height:260px;margin-top:8px;font-family:ui-monospace,Menlo,monospace;font-size:16px;background:var(--btn);color:var(--fg);border:0.5px solid var(--line);border-radius:10px;padding:8px}
 .scr{container-type:inline-size;aspect-ratio:16/9;background:#fff;position:relative;overflow:hidden;display:flex;flex-direction:column;font-family:"Hiragino Sans","Noto Sans JP",sans-serif;color:#111;-webkit-user-select:none;user-select:none}
-.scr *{box-sizing:border-box}
 .col{width:11cqw;flex-shrink:0}
 .vt{writing-mode:vertical-rl;font-weight:500;line-height:1.05;letter-spacing:.1cqw}
 .chv{position:absolute;top:0;width:1.8cqw;height:5cqw;background:#c8102e;clip-path:polygon(0 0,45% 0,100% 50%,45% 100%,0 100%,55% 50%)}
@@ -45,13 +45,19 @@ textarea{width:100%;height:260px;margin-top:8px;font-family:ui-monospace,Menlo,m
 @keyframes tk{from{transform:translateX(100cqw)}to{transform:translateX(-100%)}}
 @keyframes pl{50%{opacity:.25}}
 @media (orientation:landscape) and (max-height:500px){
-.app{max-width:none;display:grid;grid-template-columns:minmax(140px,175px) minmax(0,1fr) minmax(160px,220px);gap:8px;padding:8px;height:calc(100dvh - var(--st) - var(--sb));align-items:stretch}
-.pl{grid-column:1;grid-row:1}
-.frame{grid-column:2;grid-row:1;align-self:center;justify-self:center;width:100%;max-width:calc((100dvh - var(--st) - var(--sb) - 28px)*16/9 + 12px);padding:6px}
-.pr{grid-column:3;grid-row:1}
-.pl,.pr{overflow:auto;-webkit-overflow-scrolling:touch;padding:10px}
-.pl button{font-size:14px;min-height:40px;padding:0 8px;flex:1 1 100%}
-.pl .half button{flex:1 1 40%}
+.app{max-width:none;display:grid;grid-template-columns:minmax(0,1fr) minmax(170px,240px);grid-template-rows:auto minmax(0,1fr);gap:8px;padding:8px;height:calc(100dvh - var(--st) - var(--sb))}
+.pl{grid-column:1/3;grid-row:1;display:flex;flex-wrap:nowrap;align-items:center;gap:6px;overflow-x:auto;overflow-y:hidden;padding:6px 8px;border-radius:10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.pl::-webkit-scrollbar{display:none}
+.pl .row{display:contents}
+.pl .ttl,.pl .t{display:none}
+.pl .s{display:inline}
+.pl .lbl{flex:0 0 auto;font-size:12px;margin-left:4px}
+.pl select{flex:0 0 150px;width:150px;min-height:36px;padding:0 8px}
+.pl #dst{display:none}
+.pl #stat{flex:0 0 auto;white-space:nowrap;font-size:12px}
+.pl button{flex:0 0 auto;font-size:14px;min-height:36px;min-width:40px;padding:0 9px;white-space:nowrap}
+.frame{grid-column:1;grid-row:2;align-self:center;justify-self:center;width:100%;max-width:calc((100dvh - var(--st) - var(--sb) - 84px)*16/9 + 12px);padding:6px}
+.pr{grid-column:2;grid-row:2;overflow:auto;-webkit-overflow-scrolling:touch;padding:10px}
 .ann{font-size:13px;line-height:1.6}
 textarea{height:140px}
 }
@@ -75,20 +81,20 @@ body.only .frame{border-radius:0;padding:0;max-width:none;width:min(calc(100vw -
 </div>
 <section class="pnl pl">
 <p class="ttl">運行設定</p>
-<div class="row"><select id="sv"></select></div>
+<div class="row"><select id="sv" aria-label="系統と行き先"></select></div>
 <div class="row"><span id="dst"></span></div>
 <div class="row"><span id="stat"></span></div>
-<div class="row half">
-<button id="bk"><i class="ti ti-player-track-prev"></i> 戻る</button>
-<button id="fw">進む <i class="ti ti-player-track-next"></i></button>
+<div class="row">
+<button id="bk" aria-label="戻る"><i class="ti ti-player-track-prev"></i><span class="t"> 戻る</span></button>
+<button id="fw" aria-label="進む"><span class="t">進む </span><i class="ti ti-player-track-next"></i></button>
 </div>
-<div class="row"><button id="au"><i class="ti ti-player-play"></i> 自動</button></div>
-<div class="row half">
-<button id="mpb"><i class="ti ti-map"></i> 路線図</button>
-<button id="only"><i class="ti ti-device-tv"></i> LCDのみ</button>
+<div class="row"><button id="au" aria-label="自動"><i class="ti ti-player-play"></i><span class="t"> 自動</span></button></div>
+<div class="row">
+<button id="mpb" aria-label="路線図"><i class="ti ti-map"></i><span class="t"> 路線図</span></button>
+<button id="only" aria-label="LCDのみ表示"><i class="ti ti-device-tv"></i><span class="t"> LCDのみ</span></button>
 </div>
-<div class="row"><span class="lbl">表示器の位置</span></div>
-<div class="row half"><button id="sdL">左側ドア上</button><button id="sdR">右側ドア上</button></div>
+<div class="row"><span class="lbl"><span class="t">表示器の位置</span><span class="s">表示器</span></span></div>
+<div class="row"><button id="sdL" aria-label="進行方向左側のドア上"><span class="t">左側ドア上</span><span class="s">左</span></button><button id="sdR" aria-label="進行方向右側のドア上"><span class="t">右側ドア上</span><span class="s">右</span></button></div>
 </section>
 <section class="pnl pr">
 <p class="ttl">放送</p>
@@ -230,7 +236,7 @@ $('fw').onclick=fw;$('bk').onclick=bk;
 $('sv').onchange=e=>{sv=+e.target.value;t=0;ph='stop';enter()};
 $('sdL').onclick=()=>{side='L';doorBuilt=false;render()};$('sdR').onclick=()=>{side='R';doorBuilt=false;render()};
 $('mpb').onclick=()=>{clearS();setMode('map');tmS.push(setTimeout(()=>setMode('main'),5000))};
-$('au').onclick=()=>{if(tmA){clearTimeout(tmA);tmA=null;keepAwake(false);$('au').innerHTML='<i class="ti ti-player-play"></i> 自動'}else{sched();keepAwake(true);$('au').innerHTML='<i class="ti ti-player-pause"></i> 停止'}};
+$('au').onclick=()=>{if(tmA){clearTimeout(tmA);tmA=null;keepAwake(false);$('au').innerHTML='<i class="ti ti-player-play"></i><span class="t"> 自動</span>';$('au').setAttribute('aria-label','自動')}else{sched();keepAwake(true);$('au').innerHTML='<i class="ti ti-player-pause"></i><span class="t"> 停止</span>';$('au').setAttribute('aria-label','停止')}};
 $('only').onclick=()=>{document.body.classList.add('only');window.scrollTo(0,0)};
 $('frame').onclick=()=>{if(document.body.classList.contains('only'))document.body.classList.remove('only')};
 $('ex').onclick=()=>{let o='';SV.forEach((v,n)=>{const S=v.s,M=manners(S);o+='================================================================\n  '+(n+1)+'. '+v.l+'\n================================================================\n\n';for(let i=0;i<S.length-1;i++){const a=dep(S,i);o+='【'+S[i].t[0]+' 発車後】\n'+a[0]+'\n'+a[1]+'\n\n';if(M[i])o+='【マナー放送】\n'+M[i][0]+'\n'+M[i][1]+'\n\n';const b=soonA(S,i+1);o+='【'+S[i+1].t[0]+' 到着前（まもなく）】\n'+b[0]+'\n'+b[1]+'\n\n'}o+='\n'});$('ta').value=o;$('ta').style.display='block';$('cp').style.display=''};
