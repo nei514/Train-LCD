@@ -93,6 +93,7 @@ body.only .frame{border-radius:0;padding:0;max-width:none;width:min(calc(100vw -
 <button id="mpb" aria-label="路線図"><i class="ti ti-map"></i><span class="t"> 路線図</span></button>
 <button id="only" aria-label="LCDのみ表示"><i class="ti ti-device-tv"></i><span class="t"> LCDのみ</span></button>
 </div>
+<div class="row"><button id="em" aria-label="急停車" aria-pressed="false" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg viewBox="0 0 100 100" width="30" height="30" style="flex-shrink:0"><rect width="100" height="100" rx="14" fill="#e63a12"/><text x="50" y="34" font-size="30" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">STOP</text><rect x="12" y="44" width="30" height="34" rx="6" fill="#fff"/><rect x="17" y="50" width="20" height="12" rx="2" fill="#e63a12"/><circle cx="19" cy="70" r="2.6" fill="#e63a12"/><circle cx="35" cy="70" r="2.6" fill="#e63a12"/><path d="M18 78l-6 12M36 78l6 12" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="68" cy="50" r="9" fill="none" stroke="#fff" stroke-width="3.5"/><rect x="64" y="46" width="8" height="30" rx="4" fill="#fff"/><path d="M56 68q2-4 8-2v-2h20q6 0 6 8v6q0 14-14 14h-6q-8 0-12-10z" fill="#fff"/></svg><span class="t">急停車</span></button></div>
 <div class="row"><span class="lbl"><span class="t">表示器の位置</span><span class="s">表示器</span></span></div>
 <div class="row"><button id="sdL" aria-label="進行方向左側のドア上"><span class="t">左側ドア上</span><span class="s">左</span></button><button id="sdR" aria-label="進行方向右側のドア上"><span class="t">右側ドア上</span><span class="s">右</span></button></div>
 </section>
@@ -148,7 +149,18 @@ if(tm){J+='お忘れ物のないよう、ご注意ください。今日も'+ln.t
 return[J,E.trim()]}
 function soonA(S,i){const last=S.length-1,b=S[i],tm=i===last;let J='まもなく、'+(tm?'終点、':'')+b.t[0]+'、'+b.t[0]+'。お出口は、'+SD[b.door][0]+'側です。'+xfJ(b);let E='We will soon be arriving at '+b.t[2]+', '+cd(b)+(tm?', the terminal':'')+'. The doors on the '+SD[b.door][1]+' side will open.'+xfE(b);const c=chg(S,b,i);J+=c[0];E+=c[1];if(tm){J+='お忘れ物のないよう、ご注意ください。';E+=' Please make sure you have all your belongings with you.'}return[J,E]}
 function manners(S){const n=S.length-1,m={},a=Math.max(1,Math.floor(n/3)),b=Math.floor(2*n/3);if(a<n-1)m[a]=PS;if(b<n-1&&b!==a)m[b]=SS;return m}
-let sv=0,t=0,ph='stop',L=0,side='L',mode='main',tmA=null,tmS=[],lastTick='',doorBuilt=false,wl=null;
+const IC={
+seat:'<rect x="14" y="58" width="40" height="8" rx="2"/><rect x="46" y="30" width="8" height="36" rx="2"/><rect x="18" y="66" width="6" height="18"/><rect x="44" y="66" width="6" height="18"/><circle cx="32" cy="24" r="7"/><path d="M26 34h12l4 22H22z"/><circle cx="74" cy="22" r="7"/><path d="M68 32h12l3 26h-5l-2 26h-5l-1-24h-1l-1 24h-5l-2-26h-5z"/><path d="M86 40l6 44" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>',
+phone:'<g transform="rotate(-28 50 50)"><rect x="34" y="14" width="32" height="70" rx="6"/><rect x="39" y="22" width="22" height="30" rx="2" fill="#7b7e83"/><text x="50" y="70" font-size="10" text-anchor="middle" fill="#d7262c" font-weight="700">マナー</text><text x="50" y="79" font-size="6" text-anchor="middle" fill="#d7262c">モード</text></g><path d="M18 30q-6 8 0 16M12 26q-9 12 0 24M84 54q6 8 0 16M90 50q9 12 0 24" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/><text x="78" y="92" font-size="11" text-anchor="middle" fill="#fff" font-weight="700">通話</text><path d="M66 82l24 12M90 82l-24 12" stroke="#d7262c" stroke-width="2.5"/>',
+strap:'<rect x="8" y="8" width="84" height="6" rx="3"/><rect x="46" y="14" width="8" height="26"/><path d="M50 40l-16 30h32z" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/><rect x="36" y="58" width="28" height="22" rx="8"/><rect x="40" y="78" width="20" height="14" rx="3"/>'};
+const MCARD={PS:[['seat','優先席を必要とされるお客様には、<br>席をお譲りください。','Please offer your seat to those who may need it.'],['phone','マナーモードに設定の上、<br>通話はご遠慮ください。','Please set your mobile phone to silent mode<br>and refrain from talking on the phone.']],SS:[['strap','急停車することがありますので、<br>つり革や手すりにおつかまりください。','The train may stop suddenly.<br>Please hold on to a strap or handrail.']]};
+const mannerHTML=c=>'<div style="flex:1;display:flex;align-items:center;justify-content:center;gap:5cqw;padding:0 5cqw;border-top:.3cqw solid #c9ced3"><svg viewBox="0 0 100 100" style="width:22cqw;height:22cqw;flex-shrink:0;background:#7b7e83;border-radius:2cqw;fill:#fff;padding:1.5cqw">'+IC[c[0]]+'</svg><div style="min-width:0"><div style="font-size:3.4cqw;font-weight:500;line-height:1.45;color:#111">'+c[1]+'</div><div style="font-size:1.9cqw;line-height:1.4;color:#333;margin-top:1.2cqw">'+c[2]+'</div></div></div>';
+const emHTML='<div style="flex:1;background:#ffd400;padding:1.6cqw;display:flex"><div style="flex:1;position:relative;overflow:hidden;background:#ecbd2c;border-radius:1.6cqw;box-shadow:inset 0 0 0 .5cqw #f7d75a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">'+
+'<svg viewBox="0 0 40 100" style="position:absolute;height:88%;left:50%;top:6%;transform:translateX(-50%) rotate(14deg)"><rect x="8" y="0" width="24" height="66" rx="12" fill="#ff8a00"/><circle cx="20" cy="86" r="12" fill="#ff8a00"/></svg>'+
+'<div style="position:relative;font-size:8.4cqw;font-weight:900;color:#ff0000;line-height:1.1;letter-spacing:.4cqw;animation:pl 1s steps(1) infinite">急停車します。</div>'+
+'<div style="position:relative;font-size:4.4cqw;font-weight:800;color:#111;margin-top:1.6cqw">ご注意下さい。</div>'+
+'<div style="position:relative;font-size:2.4cqw;font-weight:700;color:#111;margin-top:1.8cqw;line-height:1.35">Attention please.<br>The emergency brake has been applied.</div></div></div>';
+let em=false,sv=0,t=0,ph='stop',L=0,side='L',mode='main',tmA=null,tmS=[],lastTick='',doorBuilt=false,wl=null,mnC=null;
 const $=id=>document.getElementById(id);
 SV.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=v.l;$('sv').appendChild(o)});
 function fit(el,mx,mn){let f=mx;el.style.fontSize=f+'cqw';while(el.scrollWidth>el.clientWidth+1&&f>mn){f-=.25;el.style.fontSize=f+'cqw'}}
@@ -188,7 +200,9 @@ const lab={next:['つぎは','つぎは','Next'],soon:['まもなく','まもな
 $('nx').innerHTML='<div style="width:30cqw;display:flex;align-items:center;justify-content:flex-end;gap:1.6cqw;padding-right:1cqw"><div style="text-align:right"><div style="font-size:3.6cqw;font-weight:500;white-space:nowrap">'+lab+'</div>'+(t===last?'<div style="font-size:2cqw;color:#d7262c;font-weight:500">'+['終点','しゅうてん','Terminal'][L]+'</div>':'')+'</div><div style="width:10.5cqw;height:10.5cqw;border-radius:50%;border:1cqw solid '+LN[tg.code].c+';display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;flex-shrink:0"><span style="font-size:2.6cqw;font-weight:500">'+tg.code+'</span><span style="font-size:3.6cqw;font-weight:500">'+String(tg.num).padStart(2,'0')+'</span></div></div><div id="nm" style="flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-align:center;font-weight:500;letter-spacing:1.5cqw;padding-right:2cqw"></div>';
 const nm=$('nm');nm.textContent=tg.t[L];if(L===2)nm.style.letterSpacing='0';fit(nm,L===2?7:9.5,3);
 $('dv').style.background=ln.c;
-if(mode==='door'&&ph==='soon'){if(!doorBuilt){$('rb').innerHTML=doorHTML(tg);doorBuilt=true}}
+if(em){doorBuilt=false;$('rb').innerHTML=emHTML}
+else if(mode==='mn'&&mnC){doorBuilt=false;$('rb').innerHTML=mannerHTML(mnC)}
+else if(mode==='door'&&ph==='soon'){if(!doorBuilt){$('rb').innerHTML=doorHTML(tg);doorBuilt=true}}
 else{doorBuilt=false;const s0=ph==='stop'?t:t-1,cols=[];for(let k=s0;k<=Math.min(last,s0+7);k++)cols.push(k);
 let nr='',br='',cr='',xr='';
 cols.forEach((k,j)=>{const s=S[k],g=j===0&&ph!=='stop',cur=j===0&&ph==='stop',isT=k===t,x=XF[s.code+':'+s.t[0]]||[],c=g?'#8f8f8f':LN[(j===0?(S[k+1]||s):s).line].c,tc=g?'#999':'#111',n=s.t[L];
@@ -223,13 +237,15 @@ $('annH').textContent=h;$('annJ').textContent=a[0];$('annE').textContent=a[1];
 $('annM').innerHTML=mm?'<div style="font-size:12px;color:var(--sub);margin-top:6px">マナー放送</div><div>'+mm[0]+'</div><div style="color:var(--sub)">'+mm[1]+'</div>':''}
 function clearS(){tmS.forEach(x=>{clearTimeout(x);clearInterval(x)});tmS=[]}
 function setMode(m){mode=m;doorBuilt=false;render()}
-function enter(){clearS();mode='main';doorBuilt=false;
-if(ph==='next')tmS.push(setTimeout(()=>{setMode('map');tmS.push(setTimeout(()=>setMode('main'),5000))},3000));
+function enter(){clearS();mode='main';doorBuilt=false;mnC=null;
+const MM=ph==='next'?manners(SV[sv].s)[t-1]:null,cards=MM?MCARD[MM===PS?'PS':'SS']:null;
+if(cards){const dur=cards.length>1?4000:5000;const cyc=()=>{tmS.push(setTimeout(()=>{const show=k=>{if(k>=cards.length){mnC=null;setMode('main');cyc();return}mnC=cards[k];setMode('mn');tmS.push(setTimeout(()=>show(k+1),dur))};show(0)},2500))};cyc()}
+else if(ph==='next')tmS.push(setTimeout(()=>{setMode('map');tmS.push(setTimeout(()=>setMode('main'),5000))},3000));
 if(ph==='soon'){const cyc=()=>{tmS.push(setTimeout(()=>{setMode('door');tmS.push(setTimeout(()=>{setMode('main');cyc()},6000))},2500))};cyc()}
 render();annUpdate()}
 function fw(){const last=SV[sv].s.length-1;if(ph==='stop'){if(t<last){t++;ph='next'}else if(tmA){t=0}}else if(ph==='next')ph='soon';else ph='stop';enter()}
 function bk(){if(ph==='stop'){if(t>0)ph='soon'}else if(ph==='soon')ph='next';else{t--;ph='stop'}enter()}
-function sched(){tmA=setTimeout(()=>{fw();sched()},{stop:5000,next:11000,soon:9500}[ph])}
+function sched(){tmA=setTimeout(()=>{if(!em)fw();sched()},{stop:5000,next:11000,soon:9500}[ph])}
 async function keepAwake(on){try{if(on&&'wakeLock' in navigator){wl=await navigator.wakeLock.request('screen')}else if(!on&&wl){await wl.release();wl=null}}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&tmA)keepAwake(true)});
 $('fw').onclick=fw;$('bk').onclick=bk;
@@ -237,6 +253,7 @@ $('sv').onchange=e=>{sv=+e.target.value;t=0;ph='stop';enter()};
 $('sdL').onclick=()=>{side='L';doorBuilt=false;render()};$('sdR').onclick=()=>{side='R';doorBuilt=false;render()};
 $('mpb').onclick=()=>{clearS();setMode('map');tmS.push(setTimeout(()=>setMode('main'),5000))};
 $('au').onclick=()=>{if(tmA){clearTimeout(tmA);tmA=null;keepAwake(false);$('au').innerHTML='<i class="ti ti-player-play"></i><span class="t"> 自動</span>';$('au').setAttribute('aria-label','自動')}else{sched();keepAwake(true);$('au').innerHTML='<i class="ti ti-player-pause"></i><span class="t"> 停止</span>';$('au').setAttribute('aria-label','停止')}};
+$('em').onclick=()=>{em=!em;const b=$('em');b.setAttribute('aria-pressed',em);b.style.background=em?'#e63a12':'';b.style.color=em?'#fff':'';b.style.borderColor=em?'#e63a12':'';if(em){clearS();mode='main';render();$('annH').textContent='急停車';$('annJ').textContent='急停車します。ご注意下さい。';$('annE').textContent='Attention please. The emergency brake has been applied.';$('annM').innerHTML=''}else enter()};
 $('only').onclick=()=>{document.body.classList.add('only');window.scrollTo(0,0)};
 $('frame').onclick=()=>{if(document.body.classList.contains('only'))document.body.classList.remove('only')};
 $('ex').onclick=()=>{let o='';SV.forEach((v,n)=>{const S=v.s,M=manners(S);o+='================================================================\n  '+(n+1)+'. '+v.l+'\n================================================================\n\n';for(let i=0;i<S.length-1;i++){const a=dep(S,i);o+='【'+S[i].t[0]+' 発車後】\n'+a[0]+'\n'+a[1]+'\n\n';if(M[i])o+='【マナー放送】\n'+M[i][0]+'\n'+M[i][1]+'\n\n';const b=soonA(S,i+1);o+='【'+S[i+1].t[0]+' 到着前（まもなく）】\n'+b[0]+'\n'+b[1]+'\n\n'}o+='\n'});$('ta').value=o;$('ta').style.display='block';$('cp').style.display=''};
