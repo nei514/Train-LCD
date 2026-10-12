@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="車内LCD">
+<meta name="theme-color" content="#000000">
+<title>奈留都線・仙山線・青海線 車内LCD</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--sub:#5f5f5a;--card:#f3f3f1;--line:rgba(0,0,0,.12);--btn:#fff;--acc:#2b6fd6;--text-primary:var(--fg);--text-secondary:var(--sub);--border-accent:var(--acc);--sl:env(safe-area-inset-left);--sr:env(safe-area-inset-right);--st:env(safe-area-inset-top);--sb:env(safe-area-inset-bottom)}
+@media (prefers-color-scheme:dark){:root{--bg:#121212;--fg:#eee;--sub:#aaa;--card:#1e1e1e;--line:rgba(255,255,255,.15);--btn:#2a2a2a;--acc:#6aa0ff}}
+html{-webkit-text-size-adjust:100%}
+*{-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;touch-action:manipulation;padding:var(--st) var(--sr) var(--sb) var(--sl)}
+.app{max-width:960px;margin:0 auto;padding:12px;box-sizing:border-box}
+.frame{background:#2a2c30;border-radius:12px;padding:8px;box-sizing:border-box}
+@media (min-width:600px){.frame{padding:12px}}
+.ctrl{background:var(--card);border-radius:12px;padding:12px;margin-top:12px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row+.row{margin-top:8px}
+button,select{font:inherit;font-size:16px;min-height:44px;padding:0 14px;border:0.5px solid var(--line);border-radius:10px;background:var(--btn);color:var(--fg);cursor:pointer}
+button{flex:1 1 auto}
+button:active{transform:scale(.98)}
+select{flex:1 1 100%;width:100%}
+.lbl{font-size:13px;color:var(--sub);flex:1 1 100%}
+#stat{font-size:13px;color:var(--sub)}
+.ann{border-top:0.5px solid var(--line);margin-top:12px;padding-top:10px;font-size:15px;line-height:1.7}
+textarea{width:100%;height:280px;margin-top:8px;font-family:ui-monospace,Menlo,monospace;font-size:16px;box-sizing:border-box;background:var(--btn);color:var(--fg);border:0.5px solid var(--line);border-radius:10px;padding:8px}
+.scr{container-type:inline-size;aspect-ratio:16/9;background:#fff;position:relative;overflow:hidden;display:flex;flex-direction:column;font-family:"Hiragino Sans","Noto Sans JP",sans-serif;color:#111;-webkit-user-select:none;user-select:none}
+.col{width:11cqw;flex-shrink:0;box-sizing:border-box}
+.vt{writing-mode:vertical-rl;font-weight:500;line-height:1.05;letter-spacing:.1cqw}
+.chv{position:absolute;top:0;width:1.8cqw;height:5cqw;background:#c8102e;clip-path:polygon(0 0,45% 0,100% 50%,45% 100%,0 100%,55% 50%)}
+.arw{width:13cqw;height:9cqw;background:#1f3fd1;clip-path:polygon(0 30%,55% 30%,55% 0,100% 50%,55% 100%,55% 70%,0 70%);flex-shrink:0}
+.dl{animation:dl 4s forwards}.dr{animation:dr 4s forwards}
+@keyframes dl{0%,20%{transform:translateX(0)}60%,100%{transform:translateX(-94%)}}
+@keyframes dr{0%,20%{transform:translateX(0)}60%,100%{transform:translateX(94%)}}
+@keyframes tk{from{transform:translateX(100cqw)}to{transform:translateX(-100%)}}
+@keyframes pl{50%{opacity:.25}}
+@media (orientation:landscape) and (max-height:500px){
+.app{max-width:none;display:flex;gap:12px;align-items:flex-start;padding:8px}
+.frame{flex:0 0 auto;padding:6px;width:calc((100dvh - var(--st) - var(--sb) - 28px)*16/9 + 12px)}
+.ctrl{flex:1;min-width:0;margin-top:0;max-height:calc(100dvh - var(--st) - var(--sb) - 16px);overflow:auto;-webkit-overflow-scrolling:touch}
+}
+body.only{background:#000}
+body.only .ctrl{display:none}
+body.only .app{max-width:none;padding:0;min-height:calc(100dvh - var(--st) - var(--sb));display:flex;align-items:center;justify-content:center}
+body.only .frame{border-radius:0;padding:0;width:min(calc(100vw - var(--sl) - var(--sr)),calc((100dvh - var(--st) - var(--sb))*16/9))}
+</style>
+</head>
+<body>
+<main class="app">
+<div class="frame" id="frame">
+<div class="scr">
+<div id="hd" style="height:6.5cqw;display:flex;align-items:center;gap:1.6cqw;padding:0 1.5cqw;flex-shrink:0;background:#f4f5f6"></div>
+<div id="nx" style="height:12cqw;display:flex;align-items:center;flex-shrink:0"></div>
+<div id="dv" style="height:.6cqw;flex-shrink:0"></div>
+<div id="rb" style="flex:1;display:flex;flex-direction:column;min-height:0"></div>
+<div style="height:4cqw;background:#0d2a4f;color:#ffe066;overflow:hidden;flex-shrink:0;display:flex;align-items:center;font-size:2.1cqw;white-space:nowrap"><span id="tick" style="display:inline-block;padding-left:2cqw"></span></div>
+<div id="mp" style="position:absolute;left:0;right:0;top:6.5cqw;bottom:4cqw;background:#fff;display:none"></div>
+</div>
+</div>
+<section class="ctrl">
+<div class="row"><select id="sv"></select></div>
+<div class="row">
+<button id="bk"><i class="ti ti-player-track-prev"></i> 戻る</button>
+<button id="fw">進む <i class="ti ti-player-track-next"></i></button>
+<button id="au"><i class="ti ti-player-play"></i> 自動</button>
+</div>
+<div class="row">
+<button id="mpb"><i class="ti ti-map"></i> 路線図</button>
+<button id="only"><i class="ti ti-device-tv"></i> LCDのみ表示</button>
+</div>
+<div class="row"><span class="lbl">表示器の位置</span><button id="sdL">進行方向左側のドア上</button><button id="sdR">進行方向右側のドア上</button></div>
+<div class="row"><span id="stat"></span></div>
+<div class="ann">
+<div id="annH" style="font-size:13px;color:var(--sub)"></div>
+<div id="annJ"></div>
+<div id="annE" style="color:var(--sub)"></div>
+<div id="annM" style="margin-top:6px"></div>
+</div>
+<div class="row" style="margin-top:8px"><button id="ex"><i class="ti ti-file-text"></i> 全系統の放送をテキストで表示</button><button id="cp" style="display:none"><i class="ti ti-copy"></i> コピー</button></div>
+<textarea id="ta" readonly style="display:none"></textarea>
+</section>
+</main>
+<script>
+const NT=[['奈留都','なると','Naruto','L'],['武蔵小金井','むさしこがねい','Musashi-Koganei','L'],['山里','さんり','Sanri','L'],['青木ヶ原','あおきがはら','Aokigahara','L'],['上沢','かみざわ','Kamizawa','R'],['武蔵大和','むさしやまと','Musashi-Yamato','L'],['本只見','ほんただみ','Hontadami','L'],['尾野','おの','Ono','L'],['青海','あおみ','Aomi','R'],['上之','かみの','Kamino','R'],['蒼井','あおい','Aoi','L'],['東浅井','ひがしあさい','Higashi-Asai','L'],['上越市','かみえつし','Kamietsu-Shi','L'],['浅井','あさい','Asai','L']];
+const NS=[['仙ヶ家','せんがや','Sengaya','L'],['荒川河口','あらかわかこう','Arakawa-Estuary','L'],['松ケ谷中央','まつがやちゅうおう','Matugaya-Chuo','R'],['相模湾','さがみわん','Sagami-bay','L'],['大納','おのう','Onou','L'],['上沢','かみざわ','Kamizawa','R'],['青木ヶ原','あおきがはら','Aokigahara','R'],['柳橋','やなぎばし','Yanagibashi','L'],['山砥','やまと','Yamato','L']];
+const AL={1:['海河','うみかわ','Umikawa','R'],6:['柴谷','しばたに','Sibatani','R'],11:['青木ヶ原','あおきがはら','Aokigahara','L']};
+const LN={NT:{t:['奈留都線','なるとせん','Naruto Line'],c:'#0b62b5'},NS:{t:['仙山線','せんざんせん','Senzan Line'],c:'#13944a'},A:{t:['青海線','あおみせん','Aomi Line'],c:'#17a398'}};
+const TY={local:{t:['各駅停車','かくえきていしゃ','Local'],bg:'#8a8a8a'},rapid:{t:['快速','かいそく','Rapid'],bg:'#f08300'},srapid:{t:['新快速','しんかいそく','Special Rapid'],bg:'#1d7fe0'},ltd:{t:['特急','とっきゅう','Limited Exp.'],bg:'#d7262c'}};
+const TYE={local:'local train',rapid:'Rapid Service',srapid:'Special Rapid Service',ltd:'Limited Express'};
+const XF={'NT:青木ヶ原':['NS','A'],'NT:上沢':['NS'],'NS:青木ヶ原':['NT','A'],'NS:上沢':['NT'],'A:青木ヶ原':['NT','NS']};
+const SD={L:['左','left'],R:['右','right']};
+const JR='【JR東日本 運行情報　10月12日14時59分現在】　山手線：渋谷駅での人身事故の影響で、内回りで運転見合わせ（15時00分頃再開見込）　／　湘南新宿ライン：山手線内の人身事故の影響で運転見合わせ（15時00分頃再開見込）　／　相鉄線直通列車：新宿～羽沢横浜国大間で運転見合わせ（15時00分頃再開見込）　／　京浜東北線：上下線の一部列車に遅れ。大宮方面は快速運転を中止し各駅に停車　／　埼京線：新宿～大崎間で運転見合わせ（15時00分頃再開見込）　／　川越線：埼京線への直通運転を中止　／　総武本線：台風25号の影響で八街～成東間は終日運転見合わせ、バス代行輸送　／　内房線：台風25号の影響で姉ケ崎～長浦間は終日運転見合わせ、バス代行輸送　／　久留里線：台風25号の影響で久留里～上総亀山間は終日運転見合わせ　／　その他の路線は平常運転';
+const PS=['この電車には、優先席があります。優先席を必要とされるお客様がいらっしゃいましたら、席をお譲りください。お客様のご協力をお願いいたします。お客様にお願いいたします。優先席付近では、携帯電話の電源をお切りください。それ以外の場所では、マナーモードに設定のうえ、通話はお控えください。ご協力をお願いいたします。','There are priority seats in most cars. Please offer your seat to those who may need it. Please switch off your mobile phone when you are near the priority seats. In other areas, please set it to silent mode and refrain from talking on the phone.'];
+const SS=['お客様にお願いいたします。電車は事故防止のため、やむを得ず急停車することがありますので、お立ちのお客様は、つり革や手すりにおつかまりください。','It may be necessary for the train to stop suddenly to prevent an accident. So please be careful.'];
+const rg=(a,b)=>{const r=[];for(let i=a;i<=b;i++)r.push(i);return r};
+function mk(c,n,ty){const d=c==='NT'?NT[n-1]:c==='NS'?NS[n-1]:AL[n];return{t:[d[0],d[1],d[2]],door:d[3],code:c,num:n,line:c,type:ty}}
+const PAT={local:rg(1,14),rapid:[1,4,5,7,9,10,13,14],srapid:[1,4,5,9,10,13,14],ltd:[1,4,10,13,14]};
+const SV=[];
+for(const ty of ['local','rapid','srapid','ltd']){SV.push({l:'奈留都線 '+TY[ty].t[0]+' 浅井行き',s:PAT[ty].map(n=>mk('NT',n,ty))});SV.push({l:'奈留都線 '+TY[ty].t[0]+' 奈留都行き',s:[...PAT[ty]].reverse().map(n=>mk('NT',n,ty))})}
+SV.push({l:'仙山線 各駅停車 山砥行き',s:rg(1,9).map(n=>mk('NS',n,'local'))});
+SV.push({l:'仙山線 各駅停車 仙ヶ家行き',s:rg(1,9).reverse().map(n=>mk('NS',n,'local'))});
+SV.push({l:'青海線直通 浅井行き（海河→浅井）',s:[mk('A',1,'rapid'),mk('A',6,'rapid'),mk('A',11,'rapid'),...rg(5,14).map(n=>mk('NT',n,'local'))]});
+SV.push({l:'青海線直通 海河行き（浅井→海河）',s:[...rg(4,14).reverse().map(n=>mk('NT',n,'local')),mk('A',6,'rapid'),mk('A',1,'rapid')]});
+const cd=s=>s.code+' '+String(s.num).padStart(2,'0');
+const an=w=>/^[AEIOU]/.test(w)?'an '+w:'a '+w;
+const eor=a=>a.length<2?a.join(''):a.length===2?a[0]+' or '+a[1]:a.slice(0,-1).join(', ')+', or '+a[a.length-1];
+const xfJ=s=>{const x=XF[s.code+':'+s.t[0]]||[];return x.length?x.map(c=>LN[c].t[0]).join('、')+'は、お乗り換えです。':''};
+const xfE=s=>{const x=XF[s.code+':'+s.t[0]]||[];return x.length?' Please change here for '+x.map(c=>'the '+LN[c].t[2]).join(' and ')+'.':''};
+const thx=ty=>ty==='ltd'?'traveling on':'using';
+function between(a,b){if(a.code!==b.code||a.code==='A')return[];const arr=a.code==='NT'?NT:NS;const lo=Math.min(a.num,b.num),hi=Math.max(a.num,b.num);let r=[];for(let n=lo+1;n<hi;n++)r.push(arr[n-1]);if(a.num>b.num)r.reverse();return r}
+function chg(S,b,i){const last=S.length-1,d=S[last];if(i+1<=last&&S[i+1].line!==b.line){const n=S[i+1];return['この電車は、'+b.t[0]+'から'+LN[n.line].t[0]+'に入り、'+TY[n.type].t[0]+'、'+d.t[0]+'行きとなります。',' From '+b.t[2]+', this train will become '+an(LN[n.line].t[2])+' '+TYE[n.type]+' bound for '+d.t[2]+'.']}return['','']}
+function dep(S,i){const last=S.length-1,a=S[i],b=S[i+1],d=S[last],ty=b.type,ln=LN[b.line];let J='',E='';const nl=i>0&&b.line!==a.line;
+if(i===0||nl){J+='今日も'+ln.t[0]+'をご利用くださいまして、ありがとうございます。';E+='Thank you for '+thx(ty)+' the '+ln.t[2]+'.';let th=null;for(let j=i+2;j<=last;j++)if(S[j].line!==b.line){th=S[j];break}
+if(th){J+='この電車は、'+LN[th.line].t[0]+'直通、'+d.t[0]+'行きです。'+ln.t[0]+'内は'+TY[ty].t[0]+'、'+LN[th.line].t[0]+'内は'+TY[th.type].t[0]+'となります。';E+=' This is the '+TYE[ty]+' bound for '+d.t[2]+', going through to the '+LN[th.line].t[2]+'. This train will run as '+an(TYE[th.type])+' on the '+LN[th.line].t[2]+'.'}
+else{J+='この電車は、'+TY[ty].t[0]+'、'+d.t[0]+'行きです。';E+=' This is the '+TYE[ty]+' bound for '+d.t[2]+'.';if(ty!=='local'&&i===0){const st=S.slice(1);J+='停車駅は、'+st.map((s,k)=>k===st.length-1?'終点、'+s.t[0]:s.t[0]).join('、')+'です。';E+=' We will be stopping at '+st.slice(0,-1).map(s=>s.t[2]).join(', ')+', and '+d.t[2]+', the terminal.'}}}
+const sk=between(a,b);if(sk.length){if(!(i===0||nl))J+=TY[ty].t[0]+'、'+d.t[0]+'行きです。';J+=sk.map(x=>x[0]).join('、')+'には止まりません。';E+=' This train will not stop at '+eor(sk.map(x=>x[2]))+'.'}
+const tm=i+1===last;J+='次は、'+(tm?'終点、':'')+b.t[0]+'、'+b.t[0]+'。お出口は、'+SD[b.door][0]+'側です。'+xfJ(b);E+=' The next station is '+b.t[2]+', '+cd(b)+(tm?', the terminal':'')+'. The doors on the '+SD[b.door][1]+' side will open.'+xfE(b);
+const c=chg(S,b,i+1);J+=c[0];E+=c[1];
+if(tm){J+='お忘れ物のないよう、ご注意ください。今日も'+ln.t[0]+'をご利用くださいまして、ありがとうございました。';E+=' Please make sure you have all your belongings with you. Thank you for '+thx(ty)+' the '+ln.t[2]+'.'}
+return[J,E.trim()]}
+function soonA(S,i){const last=S.length-1,b=S[i],tm=i===last;let J='まもなく、'+(tm?'終点、':'')+b.t[0]+'、'+b.t[0]+'。お出口は、'+SD[b.door][0]+'側です。'+xfJ(b);let E='We will soon be arriving at '+b.t[2]+', '+cd(b)+(tm?', the terminal':'')+'. The doors on the '+SD[b.door][1]+' side will open.'+xfE(b);const c=chg(S,b,i);J+=c[0];E+=c[1];if(tm){J+='お忘れ物のないよう、ご注意ください。';E+=' Please make sure you have all your belongings with you.'}return[J,E]}
+function manners(S){const n=S.length-1,m={},a=Math.max(1,Math.floor(n/3)),b=Math.floor(2*n/3);if(a<n-1)m[a]=PS;if(b<n-1&&b!==a)m[b]=SS;return m}
+let sv=0,t=0,ph='stop',L=0,side='L',mode='main',tmA=null,tmS=[],lastTick='',doorBuilt=false,wl=null;
+const $=id=>document.getElementById(id);
+SV.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=v.l;$('sv').appendChild(o)});
+function fit(el,mx,mn){let f=mx;el.style.fontSize=f+'cqw';while(el.scrollWidth>el.clientWidth+1&&f>mn){f-=.25;el.style.fontSize=f+'cqw'}}
+const NTX=i=>120+(i-1)*104;
+const NSP={1:[564,705],2:[564,640],3:[564,570],4:[564,500],5:[564,430],6:[564,352],7:[404,352],8:[404,175],9:[404,60]};
+const AP={1:[90,470],6:[250,470],11:[404,352]};
+const pos=s=>s.code==='NT'?(s.num===4?[418,341]:s.num===5?[550,341]:[NTX(s.num),330]):s.code==='NS'?(s.num===6?[550,341]:s.num===7?[418,341]:NSP[s.num]):(s.num===11?[418,341]:AP[s.num]);
+function lbl(txt,x,y,up){if(L===2)return'<text transform="translate('+x+','+y+') rotate(-55)" font-size="22" fill="#111">'+txt+'</text>';const ch=[...txt];return ch.map((c,i)=>'<text x="'+x+'" y="'+(up?y-(ch.length-1-i)*29:y+i*29)+'" font-size="27" text-anchor="middle" fill="#111">'+c+'</text>').join('')}
+function mapSVG(S){let g='<svg viewBox="0 0 1600 730" style="width:100%;height:100%;display:block">';
+g+='<text x="40" y="70" font-size="42" fill="#111">'+['路線図','ろせんず','Route map'][L]+'</text>';
+g+='<line x1="'+NTX(1)+'" y1="330" x2="'+NTX(14)+'" y2="330" stroke="'+LN.NT.c+'" stroke-width="14"/>';
+g+='<path d="M404 60V352H564V705" stroke="'+LN.NS.c+'" stroke-width="14" fill="none"/>';
+g+='<path d="M404 352L330 470H90" stroke="'+LN.A.c+'" stroke-width="14" fill="none"/>';
+[[432,330,404,352],[536,330,564,352]].forEach(q=>{g+='<line x1="'+q[0]+'" y1="'+q[1]+'" x2="'+q[2]+'" y2="'+q[3]+'" stroke="#111" stroke-width="34" stroke-linecap="round"/><line x1="'+q[0]+'" y1="'+q[1]+'" x2="'+q[2]+'" y2="'+q[3]+'" stroke="#fff" stroke-width="22" stroke-linecap="round"/>'});
+const dot=(x,y)=>'<circle cx="'+x+'" cy="'+y+'" r="11" fill="#fff" stroke="#111" stroke-width="5"/>';
+NT.forEach((d,i)=>{const x=NTX(i+1);if(i!==3&&i!==4)g+=dot(x,330);g+=lbl(d[L],x,300,true)});
+[1,2,3,4,5,8,9].forEach(n=>{const p=NSP[n];g+=dot(p[0],p[1]);g+='<text x="'+(n>7?p[0]-26:p[0]+26)+'" y="'+(p[1]+9)+'" font-size="'+(L===2?22:27)+'" text-anchor="'+(n>7?'end':'start')+'" fill="#111">'+NS[n-1][L]+'</text>'});
+[1,6].forEach(n=>{const p=AP[n];g+=dot(p[0],p[1]);g+='<text x="'+p[0]+'" y="'+(p[1]+46)+'" font-size="'+(L===2?22:27)+'" text-anchor="middle" fill="#111">'+AL[n][L]+'</text>'});
+[['NT',1180,560],['NS',1180,610],['A',1180,660]].forEach(q=>{g+='<rect x="'+q[1]+'" y="'+(q[2]-10)+'" width="60" height="14" fill="'+LN[q[0]].c+'"/><text x="'+(q[1]+75)+'" y="'+(q[2]+4)+'" font-size="26" fill="#111">'+LN[q[0]].t[L]+'</text>'});
+let p=pos(S[t]);if(ph!=='stop'&&t>0){const a=pos(S[t-1]);p=[(a[0]+p[0])/2,(a[1]+p[1])/2]}
+g+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="26" fill="none" stroke="#e8382f" stroke-width="8" style="animation:pl 1s steps(1) infinite"/><text x="'+p[0]+'" y="'+(p[1]+62)+'" font-size="24" text-anchor="middle" fill="#e8382f">'+['現在地','げんざいち','Now'][L]+'</text>';
+return g+'</svg>'}
+function doorHTML(tg){const open=tg.door===side;
+const leaf=(r)=>'<div class="'+(open?(r?'dr':'dl'):'')+'" style="position:absolute;top:0;'+(r?'left:50%;border-left':'left:0;border-right')+':.25cqw solid #5f656b;width:50%;height:100%;background:#a9afb5;box-sizing:border-box"><div style="position:absolute;left:20%;right:20%;top:8%;height:44%;background:#e3eaf0;border:.3cqw solid #5f656b;box-sizing:border-box"></div></div>';
+return '<div style="background:#eef1f5;color:'+(open?'#1f3fd1':'#555')+';font-size:2.4cqw;font-weight:500;text-align:center;padding:.7cqw 0;border-bottom:.3cqw solid #c9ced3;white-space:nowrap">'+(open?'こちら側のドアが開きます / Doors on this side will open.':'反対側のドアが開きます / Doors on the other side will open.')+'</div>'+
+'<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:4cqw">'+
+(open?'<div class="arw" style="transform:scaleX(-1);margin-bottom:8cqw"></div>':'<div style="width:13cqw"></div>')+
+'<div style="width:40cqw;height:24cqw;border:1cqw solid #4a4f55;border-bottom:none;box-sizing:border-box;position:relative;overflow:hidden;background:#fff">'+
+'<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#d7262c;font-weight:500;font-size:2.8cqw;line-height:1.4;text-align:center">足元に<br>ご注意ください<span style="font-size:1.8cqw;margin-top:.6cqw">Please watch your step</span></div>'+leaf(false)+leaf(true)+'</div>'+
+(open?'<div class="arw" style="margin-bottom:8cqw"></div>':'<div style="width:13cqw"></div>')+'</div>'}
+function render(){
+const S=SV[sv].s,last=S.length-1,leg=ph==='stop'?Math.min(t+1,last):t,lg=S[leg],ln=LN[lg.line],ty=TY[lg.type],tg=S[t];
+let th='';for(let j=leg+1;j<=last;j++){if(S[j].line!==lg.line){th=S[j].line;break}}
+const d=S[last];
+$('hd').innerHTML='<span style="background:'+ty.bg+';color:#fff;font-size:3.2cqw;padding:.3cqw 1.2cqw;border-radius:.6cqw;white-space:nowrap;font-weight:500">'+ty.t[L]+'</span>'+(th?'<span style="font-size:2.3cqw;white-space:nowrap">'+[LN[th].t[0]+'直通',LN[th].t[1]+'ちょくつう','Through to '+LN[th].t[2]][L]+'</span>':'')+'<span style="font-size:3.4cqw;white-space:nowrap;font-weight:500">'+(L===2?'<span style="font-size:2.2cqw">for </span>'+d.t[2]:d.t[L]+'<span style="margin-left:1.2cqw">ゆき</span>')+'</span><span style="flex:1"></span><span style="background:#2b2b2b;color:#fff;border-radius:.8cqw;width:5cqw;height:5cqw;display:flex;align-items:center;justify-content:center;font-size:3.6cqw;font-weight:500">4</span><span style="font-size:1.8cqw;align-self:flex-end;margin-bottom:.8cqw;margin-left:-1cqw">'+(L===2?'Car':'号車')+'</span>';
+const lab={next:['つぎは','つぎは','Next'],soon:['まもなく','まもなく','Arriving at'],stop:['ただいま','ただいま','Now at']}[ph][L];
+$('nx').innerHTML='<div style="width:30cqw;display:flex;align-items:center;justify-content:flex-end;gap:1.6cqw;padding-right:1cqw;box-sizing:border-box"><div style="text-align:right"><div style="font-size:3.6cqw;font-weight:500;white-space:nowrap">'+lab+'</div>'+(t===last?'<div style="font-size:2cqw;color:#d7262c;font-weight:500">'+['終点','しゅうてん','Terminal'][L]+'</div>':'')+'</div><div style="width:10.5cqw;height:10.5cqw;border-radius:50%;border:1cqw solid '+LN[tg.code].c+';box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;flex-shrink:0"><span style="font-size:2.6cqw;font-weight:500">'+tg.code+'</span><span style="font-size:3.6cqw;font-weight:500">'+String(tg.num).padStart(2,'0')+'</span></div></div><div id="nm" style="flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-align:center;font-weight:500;letter-spacing:1.5cqw;padding-right:2cqw"></div>';
+const nm=$('nm');nm.textContent=tg.t[L];if(L===2)nm.style.letterSpacing='0';fit(nm,L===2?7:9.5,3);
+$('dv').style.background=ln.c;
+if(mode==='door'&&ph==='soon'){if(!doorBuilt){$('rb').innerHTML=doorHTML(tg);doorBuilt=true}}
+else{doorBuilt=false;const s0=ph==='stop'?t:t-1,cols=[];for(let k=s0;k<=Math.min(last,s0+7);k++)cols.push(k);
+let nr='',br='',cr='',xr='';
+cols.forEach((k,j)=>{const s=S[k],g=j===0&&ph!=='stop',cur=j===0&&ph==='stop',isT=k===t,x=XF[s.code+':'+s.t[0]]||[],c=g?'#8f8f8f':LN[(j===0?(S[k+1]||s):s).line].c,tc=g?'#999':'#111',n=s.t[L];
+if(L===2){const fs=Math.min(2.2,12.5/(n.length*.56));nr+='<div class="col" style="display:flex;justify-content:center"><div class="vt" style="font-size:'+fs+'cqw;color:'+tc+'">'+n+'</div></div>'}
+else{const ch=[...n],fs=Math.min(3.2,12.5/Math.max(ch.length,3));nr+='<div class="col" style="display:flex;justify-content:center"><div style="height:12.5cqw;display:flex;flex-direction:column;justify-content:'+(ch.length===1?'center':'space-between')+';align-items:center;font-size:'+fs+'cqw;font-weight:500;line-height:1;color:'+tc+'">'+ch.map(q=>'<span>'+q+'</span>').join('')+'</div></div>'}
+let mk_;
+if(cur)mk_='<div style="position:absolute;left:.6cqw;width:9.6cqw;top:-.4cqw;height:5.8cqw;background:#e8382f;clip-path:polygon(0 0,72% 0,100% 50%,72% 100%,0 100%)"></div><div style="position:absolute;left:50%;top:50%;width:2.6cqw;height:2.6cqw;transform:translate(-50%,-50%);border-radius:50%;background:#fff"></div>';
+else{const dsz=g?1.8:4.2;mk_='<div style="position:absolute;left:50%;top:50%;width:'+dsz+'cqw;height:'+dsz+'cqw;transform:translate(-50%,-50%);border-radius:50%;box-sizing:border-box;background:'+(g?'#dcdcdc':isT?'#ffbf00':'#fff')+';'+(isT?'border:.25cqw solid #333;':'')+(isT&&ph==='soon'?'animation:pl 1s steps(1) infinite;':'')+'"></div>'}
+br+='<div class="col" style="position:relative;height:5cqw;background:'+c+'">'+mk_+'</div>';
+const bc=g?'#aaa':LN[s.code].c;
+cr+='<div class="col" style="display:flex;justify-content:center;padding-top:.7cqw"><div style="width:4.6cqw;height:4.6cqw;border-radius:50%;border:.35cqw solid '+bc+';box-sizing:border-box;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;color:'+bc+'"><span style="font-size:1.4cqw;font-weight:500">'+s.code+'</span><span style="font-size:2cqw;font-weight:500">'+String(s.num).padStart(2,'0')+'</span></div></div>';
+xr+='<div class="col" style="display:flex;flex-direction:column;align-items:center;gap:.4cqw;padding-top:.5cqw">'+x.map(q=>'<div style="display:flex;align-items:center;gap:.4cqw;font-size:1.6cqw;white-space:nowrap;color:'+tc+'"><span style="border:.25cqw solid '+LN[q].c+';color:'+LN[q].c+';background:#fff;font-size:1.3cqw;font-weight:500;padding:0 .3cqw;border-radius:.3cqw;line-height:1.3">'+q+'</span>'+LN[q].t[L]+'</div>').join('')+'</div>'});
+const lc=LN[S[cols[cols.length-1]].line].c;
+br+='<div style="width:2.6cqw;height:5cqw;flex-shrink:0;background:'+lc+';clip-path:polygon(0 0,35% 0,100% 50%,35% 100%,0 100%)"></div>';
+if(ph!=='stop'){const cx=3+9.2;br+='<div class="chv" style="left:'+cx+'cqw"></div><div class="chv" style="left:'+(cx+1.3)+'cqw"></div>'}
+$('rb').innerHTML='<div style="display:flex;padding:1.6cqw 0 1cqw 3cqw">'+nr+'</div><div style="display:flex;padding-left:3cqw;position:relative">'+br+'</div><div style="display:flex;padding-left:3cqw">'+cr+'</div><div style="display:flex;padding-left:3cqw">'+xr+'</div>'}
+const mp=$('mp');if(mode==='map'){mp.style.display='block';mp.innerHTML=mapSVG(S)}else mp.style.display='none';
+let msg=[];if(t<last&&S[t+1].line!==tg.line){const nl=LN[S[t+1].line],nt=TY[S[t+1].type];msg.push('この電車は'+tg.t[0]+'から'+nl.t[0]+' '+nt.t[0]+'となります。 From '+tg.t[2]+', this train will run as '+an(nl.t[2])+' '+TYE[S[t+1].type]+'.')}
+if(ph!=='stop'&&t>0){const p=between(S[t-1],tg);if(p.length)msg.push(p.map(x=>x[0]).join('、')+'には止まりません。 This train will not stop at '+eor(p.map(x=>x[2]))+'.')}
+if(t===last&&ph!=='next')msg.push('お忘れ物のないよう、ご注意ください。 Please make sure you have all your belongings with you.');
+if(!msg.length)msg.push('今日も'+ln.t[0]+'をご利用くださいまして、ありがとうございます。 Thank you for '+thx(lg.type)+' the '+ln.t[2]+'.');
+const tx=msg.join('　　　')+'　　　'+JR;if(tx!==lastTick){lastTick=tx;const tk=$('tick');tk.textContent=tx;tk.style.animation='none';void tk.offsetWidth;tk.style.animation='tk '+Math.round(tx.length*.28)+'s linear infinite'}
+$('stat').textContent={stop:'停車中',next:'走行中',soon:'到着直前'}[ph]+'：'+tg.t[0]+'（'+(t+1)+'/'+(last+1)+'）';
+$('sdL').style.borderColor=side==='L'?'var(--acc)':'';$('sdR').style.borderColor=side==='R'?'var(--acc)':'';
+}
+function annUpdate(){const S=SV[sv].s,M=manners(S);let h='',a=['',''],mm='';
+if(ph==='next'){h='自動放送：'+S[t-1].t[0]+' 発車後';a=dep(S,t-1);if(M[t-1])mm=M[t-1]}
+else if(ph==='soon'){h='自動放送：'+S[t].t[0]+' 到着前（まもなく）';a=soonA(S,t)}
+else{h='停車中：'+S[t].t[0]+'（「進む」で発車）'}
+$('annH').textContent=h;$('annJ').textContent=a[0];$('annE').textContent=a[1];
+$('annM').innerHTML=mm?'<div style="font-size:13px;color:var(--sub)">マナー放送</div><div>'+mm[0]+'</div><div style="color:var(--sub)">'+mm[1]+'</div>':''}
+function clearS(){tmS.forEach(x=>{clearTimeout(x);clearInterval(x)});tmS=[]}
+function setMode(m){mode=m;doorBuilt=false;render()}
+function enter(){clearS();mode='main';doorBuilt=false;
+if(ph==='next')tmS.push(setTimeout(()=>{setMode('map');tmS.push(setTimeout(()=>setMode('main'),5000))},3000));
+if(ph==='soon'){const cyc=()=>{tmS.push(setTimeout(()=>{setMode('door');tmS.push(setTimeout(()=>{setMode('main');cyc()},6000))},2500))};cyc()}
+render();annUpdate()}
+function fw(){const last=SV[sv].s.length-1;if(ph==='stop'){if(t<last){t++;ph='next'}else if(tmA){t=0}}else if(ph==='next')ph='soon';else ph='stop';enter()}
+function bk(){if(ph==='stop'){if(t>0)ph='soon'}else if(ph==='soon')ph='next';else{t--;ph='stop'}enter()}
+function sched(){tmA=setTimeout(()=>{fw();sched()},{stop:5000,next:11000,soon:9500}[ph])}
+async function keepAwake(on){try{if(on&&'wakeLock' in navigator){wl=await navigator.wakeLock.request('screen')}else if(!on&&wl){await wl.release();wl=null}}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&tmA)keepAwake(true)});
+$('fw').onclick=fw;$('bk').onclick=bk;
+$('sv').onchange=e=>{sv=+e.target.value;t=0;ph='stop';enter()};
+$('sdL').onclick=()=>{side='L';doorBuilt=false;render()};$('sdR').onclick=()=>{side='R';doorBuilt=false;render()};
+$('mpb').onclick=()=>{clearS();setMode('map');tmS.push(setTimeout(()=>setMode('main'),5000))};
+$('au').onclick=()=>{if(tmA){clearTimeout(tmA);tmA=null;keepAwake(false);$('au').innerHTML='<i class="ti ti-player-play"></i> 自動'}else{sched();keepAwake(true);$('au').innerHTML='<i class="ti ti-player-pause"></i> 停止'}};
+$('only').onclick=()=>{document.body.classList.add('only');window.scrollTo(0,0)};
+$('frame').onclick=()=>{if(document.body.classList.contains('only'))document.body.classList.remove('only')};
+$('ex').onclick=()=>{let o='';SV.forEach((v,n)=>{const S=v.s,M=manners(S);o+='================================================================\n  '+(n+1)+'. '+v.l+'\n================================================================\n\n';for(let i=0;i<S.length-1;i++){const a=dep(S,i);o+='【'+S[i].t[0]+' 発車後】\n'+a[0]+'\n'+a[1]+'\n\n';if(M[i])o+='【マナー放送】\n'+M[i][0]+'\n'+M[i][1]+'\n\n';const b=soonA(S,i+1);o+='【'+S[i+1].t[0]+' 到着前（まもなく）】\n'+b[0]+'\n'+b[1]+'\n\n'}o+='\n'});$('ta').value=o;$('ta').style.display='block';$('cp').style.display=''};
+$('cp').onclick=()=>{const ta=$('ta');ta.select();ta.setSelectionRange(0,ta.value.length);try{navigator.clipboard.writeText(ta.value).then(()=>{$('cp').innerHTML='<i class="ti ti-check"></i> コピーしました'}).catch(()=>{document.execCommand('copy')})}catch(e){document.execCommand('copy')}};
+window.addEventListener('resize',()=>{doorBuilt=false;render()});
+setInterval(()=>{L=(L+1)%3;render()},2500);
+enter();
+</script>
+</body>
+</html>
