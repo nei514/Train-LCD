@@ -11,27 +11,31 @@
 <title>奈留都線・仙山線・青海線 車内LCD</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <style>
-:root{--bg:#fff;--fg:#1a1a1a;--sub:#5f5f5a;--card:#f3f3f1;--line:rgba(0,0,0,.12);--btn:#fff;--acc:#2b6fd6;--text-primary:var(--fg);--text-secondary:var(--sub);--border-accent:var(--acc);--sl:env(safe-area-inset-left);--sr:env(safe-area-inset-right);--st:env(safe-area-inset-top);--sb:env(safe-area-inset-bottom)}
+:root{--bg:#fff;--fg:#1a1a1a;--sub:#5f5f5a;--card:#f3f3f1;--line:rgba(0,0,0,.12);--btn:#fff;--acc:#2b6fd6;--st:env(safe-area-inset-top);--sb:env(safe-area-inset-bottom);--sl:env(safe-area-inset-left);--sr:env(safe-area-inset-right)}
 @media (prefers-color-scheme:dark){:root{--bg:#121212;--fg:#eee;--sub:#aaa;--card:#1e1e1e;--line:rgba(255,255,255,.15);--btn:#2a2a2a;--acc:#6aa0ff}}
 html{-webkit-text-size-adjust:100%}
-*{-webkit-tap-highlight-color:transparent}
+*{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;touch-action:manipulation;padding:var(--st) var(--sr) var(--sb) var(--sl)}
-.app{max-width:960px;margin:0 auto;padding:12px;box-sizing:border-box}
-.frame{background:#2a2c30;border-radius:12px;padding:8px;box-sizing:border-box}
+.app{max-width:960px;margin:0 auto;padding:12px;display:flex;flex-direction:column;gap:12px}
+.frame{background:#2a2c30;border-radius:12px;padding:8px}
 @media (min-width:600px){.frame{padding:12px}}
-.ctrl{background:var(--card);border-radius:12px;padding:12px;margin-top:12px}
+.pnl{background:var(--card);border-radius:12px;padding:12px}
+.ttl{font-size:12px;color:var(--sub);margin:0 0 8px}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .row+.row{margin-top:8px}
-button,select{font:inherit;font-size:16px;min-height:44px;padding:0 14px;border:0.5px solid var(--line);border-radius:10px;background:var(--btn);color:var(--fg);cursor:pointer}
+button,select{font:inherit;font-size:16px;min-height:44px;padding:0 12px;border:0.5px solid var(--line);border-radius:10px;background:var(--btn);color:var(--fg);cursor:pointer}
 button{flex:1 1 auto}
 button:active{transform:scale(.98)}
-select{flex:1 1 100%;width:100%}
+select{width:100%}
 .lbl{font-size:13px;color:var(--sub);flex:1 1 100%}
 #stat{font-size:13px;color:var(--sub)}
-.ann{border-top:0.5px solid var(--line);margin-top:12px;padding-top:10px;font-size:15px;line-height:1.7}
-textarea{width:100%;height:280px;margin-top:8px;font-family:ui-monospace,Menlo,monospace;font-size:16px;box-sizing:border-box;background:var(--btn);color:var(--fg);border:0.5px solid var(--line);border-radius:10px;padding:8px}
+#dst{font-size:15px;font-weight:500}
+.ann{font-size:15px;line-height:1.7}
+.ann>div+div{margin-top:4px}
+textarea{width:100%;height:260px;margin-top:8px;font-family:ui-monospace,Menlo,monospace;font-size:16px;background:var(--btn);color:var(--fg);border:0.5px solid var(--line);border-radius:10px;padding:8px}
 .scr{container-type:inline-size;aspect-ratio:16/9;background:#fff;position:relative;overflow:hidden;display:flex;flex-direction:column;font-family:"Hiragino Sans","Noto Sans JP",sans-serif;color:#111;-webkit-user-select:none;user-select:none}
-.col{width:11cqw;flex-shrink:0;box-sizing:border-box}
+.scr *{box-sizing:border-box}
+.col{width:11cqw;flex-shrink:0}
 .vt{writing-mode:vertical-rl;font-weight:500;line-height:1.05;letter-spacing:.1cqw}
 .chv{position:absolute;top:0;width:1.8cqw;height:5cqw;background:#c8102e;clip-path:polygon(0 0,45% 0,100% 50%,45% 100%,0 100%,55% 50%)}
 .arw{width:13cqw;height:9cqw;background:#1f3fd1;clip-path:polygon(0 30%,55% 30%,55% 0,100% 50%,55% 100%,55% 70%,0 70%);flex-shrink:0}
@@ -41,14 +45,20 @@ textarea{width:100%;height:280px;margin-top:8px;font-family:ui-monospace,Menlo,m
 @keyframes tk{from{transform:translateX(100cqw)}to{transform:translateX(-100%)}}
 @keyframes pl{50%{opacity:.25}}
 @media (orientation:landscape) and (max-height:500px){
-.app{max-width:none;display:flex;gap:12px;align-items:flex-start;padding:8px}
-.frame{flex:0 0 auto;padding:6px;width:calc((100dvh - var(--st) - var(--sb) - 28px)*16/9 + 12px)}
-.ctrl{flex:1;min-width:0;margin-top:0;max-height:calc(100dvh - var(--st) - var(--sb) - 16px);overflow:auto;-webkit-overflow-scrolling:touch}
+.app{max-width:none;display:grid;grid-template-columns:minmax(140px,175px) minmax(0,1fr) minmax(160px,220px);gap:8px;padding:8px;height:calc(100dvh - var(--st) - var(--sb));align-items:stretch}
+.pl{grid-column:1;grid-row:1}
+.frame{grid-column:2;grid-row:1;align-self:center;justify-self:center;width:100%;max-width:calc((100dvh - var(--st) - var(--sb) - 28px)*16/9 + 12px);padding:6px}
+.pr{grid-column:3;grid-row:1}
+.pl,.pr{overflow:auto;-webkit-overflow-scrolling:touch;padding:10px}
+.pl button{font-size:14px;min-height:40px;padding:0 8px;flex:1 1 100%}
+.pl .half button{flex:1 1 40%}
+.ann{font-size:13px;line-height:1.6}
+textarea{height:140px}
 }
 body.only{background:#000}
-body.only .ctrl{display:none}
-body.only .app{max-width:none;padding:0;min-height:calc(100dvh - var(--st) - var(--sb));display:flex;align-items:center;justify-content:center}
-body.only .frame{border-radius:0;padding:0;width:min(calc(100vw - var(--sl) - var(--sr)),calc((100dvh - var(--st) - var(--sb))*16/9))}
+body.only .pl,body.only .pr{display:none}
+body.only .app{display:flex;max-width:none;padding:0;height:auto;min-height:calc(100dvh - var(--st) - var(--sb));align-items:center;justify-content:center}
+body.only .frame{border-radius:0;padding:0;max-width:none;width:min(calc(100vw - var(--sl) - var(--sr)),calc((100dvh - var(--st) - var(--sb))*16/9))}
 </style>
 </head>
 <body>
@@ -63,26 +73,32 @@ body.only .frame{border-radius:0;padding:0;width:min(calc(100vw - var(--sl) - va
 <div id="mp" style="position:absolute;left:0;right:0;top:6.5cqw;bottom:4cqw;background:#fff;display:none"></div>
 </div>
 </div>
-<section class="ctrl">
+<section class="pnl pl">
+<p class="ttl">運行設定</p>
 <div class="row"><select id="sv"></select></div>
-<div class="row">
+<div class="row"><span id="dst"></span></div>
+<div class="row"><span id="stat"></span></div>
+<div class="row half">
 <button id="bk"><i class="ti ti-player-track-prev"></i> 戻る</button>
 <button id="fw">進む <i class="ti ti-player-track-next"></i></button>
-<button id="au"><i class="ti ti-player-play"></i> 自動</button>
 </div>
-<div class="row">
+<div class="row"><button id="au"><i class="ti ti-player-play"></i> 自動</button></div>
+<div class="row half">
 <button id="mpb"><i class="ti ti-map"></i> 路線図</button>
-<button id="only"><i class="ti ti-device-tv"></i> LCDのみ表示</button>
+<button id="only"><i class="ti ti-device-tv"></i> LCDのみ</button>
 </div>
-<div class="row"><span class="lbl">表示器の位置</span><button id="sdL">進行方向左側のドア上</button><button id="sdR">進行方向右側のドア上</button></div>
-<div class="row"><span id="stat"></span></div>
+<div class="row"><span class="lbl">表示器の位置</span></div>
+<div class="row half"><button id="sdL">左側ドア上</button><button id="sdR">右側ドア上</button></div>
+</section>
+<section class="pnl pr">
+<p class="ttl">放送</p>
 <div class="ann">
-<div id="annH" style="font-size:13px;color:var(--sub)"></div>
+<div id="annH" style="font-size:12px;color:var(--sub)"></div>
 <div id="annJ"></div>
 <div id="annE" style="color:var(--sub)"></div>
-<div id="annM" style="margin-top:6px"></div>
+<div id="annM"></div>
 </div>
-<div class="row" style="margin-top:8px"><button id="ex"><i class="ti ti-file-text"></i> 全系統の放送をテキストで表示</button><button id="cp" style="display:none"><i class="ti ti-copy"></i> コピー</button></div>
+<div class="row" style="margin-top:10px"><button id="ex"><i class="ti ti-file-text"></i> 全放送をテキスト表示</button><button id="cp" style="display:none"><i class="ti ti-copy"></i> コピー</button></div>
 <textarea id="ta" readonly style="display:none"></textarea>
 </section>
 </main>
@@ -150,11 +166,11 @@ let p=pos(S[t]);if(ph!=='stop'&&t>0){const a=pos(S[t-1]);p=[(a[0]+p[0])/2,(a[1]+
 g+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="26" fill="none" stroke="#e8382f" stroke-width="8" style="animation:pl 1s steps(1) infinite"/><text x="'+p[0]+'" y="'+(p[1]+62)+'" font-size="24" text-anchor="middle" fill="#e8382f">'+['現在地','げんざいち','Now'][L]+'</text>';
 return g+'</svg>'}
 function doorHTML(tg){const open=tg.door===side;
-const leaf=(r)=>'<div class="'+(open?(r?'dr':'dl'):'')+'" style="position:absolute;top:0;'+(r?'left:50%;border-left':'left:0;border-right')+':.25cqw solid #5f656b;width:50%;height:100%;background:#a9afb5;box-sizing:border-box"><div style="position:absolute;left:20%;right:20%;top:8%;height:44%;background:#e3eaf0;border:.3cqw solid #5f656b;box-sizing:border-box"></div></div>';
+const leaf=(r)=>'<div class="'+(open?(r?'dr':'dl'):'')+'" style="position:absolute;top:0;'+(r?'left:50%;border-left':'left:0;border-right')+':.25cqw solid #5f656b;width:50%;height:100%;background:#a9afb5"><div style="position:absolute;left:20%;right:20%;top:8%;height:44%;background:#e3eaf0;border:.3cqw solid #5f656b"></div></div>';
 return '<div style="background:#eef1f5;color:'+(open?'#1f3fd1':'#555')+';font-size:2.4cqw;font-weight:500;text-align:center;padding:.7cqw 0;border-bottom:.3cqw solid #c9ced3;white-space:nowrap">'+(open?'こちら側のドアが開きます / Doors on this side will open.':'反対側のドアが開きます / Doors on the other side will open.')+'</div>'+
 '<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:4cqw">'+
 (open?'<div class="arw" style="transform:scaleX(-1);margin-bottom:8cqw"></div>':'<div style="width:13cqw"></div>')+
-'<div style="width:40cqw;height:24cqw;border:1cqw solid #4a4f55;border-bottom:none;box-sizing:border-box;position:relative;overflow:hidden;background:#fff">'+
+'<div style="width:40cqw;height:24cqw;border:1cqw solid #4a4f55;border-bottom:none;position:relative;overflow:hidden;background:#fff">'+
 '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#d7262c;font-weight:500;font-size:2.8cqw;line-height:1.4;text-align:center">足元に<br>ご注意ください<span style="font-size:1.8cqw;margin-top:.6cqw">Please watch your step</span></div>'+leaf(false)+leaf(true)+'</div>'+
 (open?'<div class="arw" style="margin-bottom:8cqw"></div>':'<div style="width:13cqw"></div>')+'</div>'}
 function render(){
@@ -163,7 +179,7 @@ let th='';for(let j=leg+1;j<=last;j++){if(S[j].line!==lg.line){th=S[j].line;brea
 const d=S[last];
 $('hd').innerHTML='<span style="background:'+ty.bg+';color:#fff;font-size:3.2cqw;padding:.3cqw 1.2cqw;border-radius:.6cqw;white-space:nowrap;font-weight:500">'+ty.t[L]+'</span>'+(th?'<span style="font-size:2.3cqw;white-space:nowrap">'+[LN[th].t[0]+'直通',LN[th].t[1]+'ちょくつう','Through to '+LN[th].t[2]][L]+'</span>':'')+'<span style="font-size:3.4cqw;white-space:nowrap;font-weight:500">'+(L===2?'<span style="font-size:2.2cqw">for </span>'+d.t[2]:d.t[L]+'<span style="margin-left:1.2cqw">ゆき</span>')+'</span><span style="flex:1"></span><span style="background:#2b2b2b;color:#fff;border-radius:.8cqw;width:5cqw;height:5cqw;display:flex;align-items:center;justify-content:center;font-size:3.6cqw;font-weight:500">4</span><span style="font-size:1.8cqw;align-self:flex-end;margin-bottom:.8cqw;margin-left:-1cqw">'+(L===2?'Car':'号車')+'</span>';
 const lab={next:['つぎは','つぎは','Next'],soon:['まもなく','まもなく','Arriving at'],stop:['ただいま','ただいま','Now at']}[ph][L];
-$('nx').innerHTML='<div style="width:30cqw;display:flex;align-items:center;justify-content:flex-end;gap:1.6cqw;padding-right:1cqw;box-sizing:border-box"><div style="text-align:right"><div style="font-size:3.6cqw;font-weight:500;white-space:nowrap">'+lab+'</div>'+(t===last?'<div style="font-size:2cqw;color:#d7262c;font-weight:500">'+['終点','しゅうてん','Terminal'][L]+'</div>':'')+'</div><div style="width:10.5cqw;height:10.5cqw;border-radius:50%;border:1cqw solid '+LN[tg.code].c+';box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;flex-shrink:0"><span style="font-size:2.6cqw;font-weight:500">'+tg.code+'</span><span style="font-size:3.6cqw;font-weight:500">'+String(tg.num).padStart(2,'0')+'</span></div></div><div id="nm" style="flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-align:center;font-weight:500;letter-spacing:1.5cqw;padding-right:2cqw"></div>';
+$('nx').innerHTML='<div style="width:30cqw;display:flex;align-items:center;justify-content:flex-end;gap:1.6cqw;padding-right:1cqw"><div style="text-align:right"><div style="font-size:3.6cqw;font-weight:500;white-space:nowrap">'+lab+'</div>'+(t===last?'<div style="font-size:2cqw;color:#d7262c;font-weight:500">'+['終点','しゅうてん','Terminal'][L]+'</div>':'')+'</div><div style="width:10.5cqw;height:10.5cqw;border-radius:50%;border:1cqw solid '+LN[tg.code].c+';display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;flex-shrink:0"><span style="font-size:2.6cqw;font-weight:500">'+tg.code+'</span><span style="font-size:3.6cqw;font-weight:500">'+String(tg.num).padStart(2,'0')+'</span></div></div><div id="nm" style="flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-align:center;font-weight:500;letter-spacing:1.5cqw;padding-right:2cqw"></div>';
 const nm=$('nm');nm.textContent=tg.t[L];if(L===2)nm.style.letterSpacing='0';fit(nm,L===2?7:9.5,3);
 $('dv').style.background=ln.c;
 if(mode==='door'&&ph==='soon'){if(!doorBuilt){$('rb').innerHTML=doorHTML(tg);doorBuilt=true}}
@@ -174,10 +190,10 @@ if(L===2){const fs=Math.min(2.2,12.5/(n.length*.56));nr+='<div class="col" style
 else{const ch=[...n],fs=Math.min(3.2,12.5/Math.max(ch.length,3));nr+='<div class="col" style="display:flex;justify-content:center"><div style="height:12.5cqw;display:flex;flex-direction:column;justify-content:'+(ch.length===1?'center':'space-between')+';align-items:center;font-size:'+fs+'cqw;font-weight:500;line-height:1;color:'+tc+'">'+ch.map(q=>'<span>'+q+'</span>').join('')+'</div></div>'}
 let mk_;
 if(cur)mk_='<div style="position:absolute;left:.6cqw;width:9.6cqw;top:-.4cqw;height:5.8cqw;background:#e8382f;clip-path:polygon(0 0,72% 0,100% 50%,72% 100%,0 100%)"></div><div style="position:absolute;left:50%;top:50%;width:2.6cqw;height:2.6cqw;transform:translate(-50%,-50%);border-radius:50%;background:#fff"></div>';
-else{const dsz=g?1.8:4.2;mk_='<div style="position:absolute;left:50%;top:50%;width:'+dsz+'cqw;height:'+dsz+'cqw;transform:translate(-50%,-50%);border-radius:50%;box-sizing:border-box;background:'+(g?'#dcdcdc':isT?'#ffbf00':'#fff')+';'+(isT?'border:.25cqw solid #333;':'')+(isT&&ph==='soon'?'animation:pl 1s steps(1) infinite;':'')+'"></div>'}
+else{const dsz=g?1.8:4.2;mk_='<div style="position:absolute;left:50%;top:50%;width:'+dsz+'cqw;height:'+dsz+'cqw;transform:translate(-50%,-50%);border-radius:50%;background:'+(g?'#dcdcdc':isT?'#ffbf00':'#fff')+';'+(isT?'border:.25cqw solid #333;':'')+(isT&&ph==='soon'?'animation:pl 1s steps(1) infinite;':'')+'"></div>'}
 br+='<div class="col" style="position:relative;height:5cqw;background:'+c+'">'+mk_+'</div>';
 const bc=g?'#aaa':LN[s.code].c;
-cr+='<div class="col" style="display:flex;justify-content:center;padding-top:.7cqw"><div style="width:4.6cqw;height:4.6cqw;border-radius:50%;border:.35cqw solid '+bc+';box-sizing:border-box;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;color:'+bc+'"><span style="font-size:1.4cqw;font-weight:500">'+s.code+'</span><span style="font-size:2cqw;font-weight:500">'+String(s.num).padStart(2,'0')+'</span></div></div>';
+cr+='<div class="col" style="display:flex;justify-content:center;padding-top:.7cqw"><div style="width:4.6cqw;height:4.6cqw;border-radius:50%;border:.35cqw solid '+bc+';background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;color:'+bc+'"><span style="font-size:1.4cqw;font-weight:500">'+s.code+'</span><span style="font-size:2cqw;font-weight:500">'+String(s.num).padStart(2,'0')+'</span></div></div>';
 xr+='<div class="col" style="display:flex;flex-direction:column;align-items:center;gap:.4cqw;padding-top:.5cqw">'+x.map(q=>'<div style="display:flex;align-items:center;gap:.4cqw;font-size:1.6cqw;white-space:nowrap;color:'+tc+'"><span style="border:.25cqw solid '+LN[q].c+';color:'+LN[q].c+';background:#fff;font-size:1.3cqw;font-weight:500;padding:0 .3cqw;border-radius:.3cqw;line-height:1.3">'+q+'</span>'+LN[q].t[L]+'</div>').join('')+'</div>'});
 const lc=LN[S[cols[cols.length-1]].line].c;
 br+='<div style="width:2.6cqw;height:5cqw;flex-shrink:0;background:'+lc+';clip-path:polygon(0 0,35% 0,100% 50%,35% 100%,0 100%)"></div>';
@@ -189,15 +205,16 @@ if(ph!=='stop'&&t>0){const p=between(S[t-1],tg);if(p.length)msg.push(p.map(x=>x[
 if(t===last&&ph!=='next')msg.push('お忘れ物のないよう、ご注意ください。 Please make sure you have all your belongings with you.');
 if(!msg.length)msg.push('今日も'+ln.t[0]+'をご利用くださいまして、ありがとうございます。 Thank you for '+thx(lg.type)+' the '+ln.t[2]+'.');
 const tx=msg.join('　　　')+'　　　'+JR;if(tx!==lastTick){lastTick=tx;const tk=$('tick');tk.textContent=tx;tk.style.animation='none';void tk.offsetWidth;tk.style.animation='tk '+Math.round(tx.length*.28)+'s linear infinite'}
+$('dst').textContent=TY[lg.type].t[0]+'　'+d.t[0]+'行き';
 $('stat').textContent={stop:'停車中',next:'走行中',soon:'到着直前'}[ph]+'：'+tg.t[0]+'（'+(t+1)+'/'+(last+1)+'）';
 $('sdL').style.borderColor=side==='L'?'var(--acc)':'';$('sdR').style.borderColor=side==='R'?'var(--acc)':'';
 }
 function annUpdate(){const S=SV[sv].s,M=manners(S);let h='',a=['',''],mm='';
-if(ph==='next'){h='自動放送：'+S[t-1].t[0]+' 発車後';a=dep(S,t-1);if(M[t-1])mm=M[t-1]}
-else if(ph==='soon'){h='自動放送：'+S[t].t[0]+' 到着前（まもなく）';a=soonA(S,t)}
+if(ph==='next'){h='発車後：'+S[t-1].t[0]+' → '+S[t].t[0];a=dep(S,t-1);if(M[t-1])mm=M[t-1]}
+else if(ph==='soon'){h='まもなく：'+S[t].t[0];a=soonA(S,t)}
 else{h='停車中：'+S[t].t[0]+'（「進む」で発車）'}
 $('annH').textContent=h;$('annJ').textContent=a[0];$('annE').textContent=a[1];
-$('annM').innerHTML=mm?'<div style="font-size:13px;color:var(--sub)">マナー放送</div><div>'+mm[0]+'</div><div style="color:var(--sub)">'+mm[1]+'</div>':''}
+$('annM').innerHTML=mm?'<div style="font-size:12px;color:var(--sub);margin-top:6px">マナー放送</div><div>'+mm[0]+'</div><div style="color:var(--sub)">'+mm[1]+'</div>':''}
 function clearS(){tmS.forEach(x=>{clearTimeout(x);clearInterval(x)});tmS=[]}
 function setMode(m){mode=m;doorBuilt=false;render()}
 function enter(){clearS();mode='main';doorBuilt=false;
