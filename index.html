@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="車内LCD">
 <meta name="theme-color" content="#000000">
-<title>奈留都線・仙山線・青海線 車内LCD</title>
+<title>奈留都線・荒川線・青海線 車内LCD</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <style>
 :root{--bg:#fff;--fg:#1a1a1a;--sub:#5f5f5a;--card:#f3f3f1;--line:rgba(0,0,0,.12);--btn:#fff;--acc:#2b6fd6;--st:env(safe-area-inset-top);--sb:env(safe-area-inset-bottom);--sl:env(safe-area-inset-left);--sr:env(safe-area-inset-right)}
@@ -110,35 +110,57 @@ body.only .frame{border-radius:0;padding:0;max-width:none;width:min(calc(100vw -
 </section>
 </main>
 <script>
-const NT=[['奈留都','なると','Naruto','L'],['武蔵小金井','むさしこがねい','Musashi-Koganei','L'],['山里','さんり','Sanri','L'],['青木ヶ原','あおきがはら','Aokigahara','L'],['上沢','かみざわ','Kamizawa','R'],['武蔵大和','むさしやまと','Musashi-Yamato','L'],['本只見','ほんただみ','Hontadami','L'],['尾野','おの','Ono','L'],['青海','あおみ','Aomi','R'],['上之','かみの','Kamino','R'],['蒼井','あおい','Aoi','L'],['東浅井','ひがしあさい','Higashi-Asai','L'],['上越市','かみえつし','Kamietsu-Shi','L'],['浅井','あさい','Asai','L']];
+const NT=[['奈留都','なると','Naruto','L'],['立教','りっきょう','Rikkyo','L'],['山里','さんり','Sanri','L'],['青木ヶ原','あおきがはら','Aokigahara','L'],['上沢','かみざわ','Kamizawa','R'],['大和','やまと','Yamato','L'],['本只見','ほんただみ','Hontadami','L'],['尾野','おの','Ono','L'],['青海','あおみ','Aomi','R'],['上之','かみの','Kamino','R'],['蒼井','あおい','Aoi','L'],['東浅井','ひがしあさい','Higashi-Asai','L'],['上越','かみえつ','Kamietsu','L'],['浅井','あさい','Asai','L']];
 const NS=[['仙ヶ家','せんがや','Sengaya','L'],['荒川河口','あらかわかこう','Arakawa-Estuary','L'],['松ケ谷中央','まつがやちゅうおう','Matugaya-Chuo','R'],['相模湾','さがみわん','Sagami-bay','L'],['大納','おのう','Onou','L'],['上沢','かみざわ','Kamizawa','R'],['青木ヶ原','あおきがはら','Aokigahara','R'],['柳橋','やなぎばし','Yanagibashi','L'],['山砥','やまと','Yamato','L']];
-const AL={1:['海河','うみかわ','Umikawa','R'],6:['柴谷','しばたに','Sibatani','R'],11:['青木ヶ原','あおきがはら','Aokigahara','L']};
-const LN={NT:{t:['奈留都線','なるとせん','Naruto Line'],c:'#0b62b5'},NS:{t:['仙山線','せんざんせん','Senzan Line'],c:'#13944a'},A:{t:['青海線','あおみせん','Aomi Line'],c:'#17a398'}};
-const TY={local:{t:['各駅停車','かくえきていしゃ','Local'],bg:'#8a8a8a'},rapid:{t:['快速','かいそく','Rapid'],bg:'#f08300'},srapid:{t:['新快速','しんかいそく','Special Rapid'],bg:'#1d7fe0'},ltd:{t:['特急','とっきゅう','Limited Exp.'],bg:'#d7262c'}};
-const TYE={local:'local train',rapid:'Rapid Service',srapid:'Special Rapid Service',ltd:'Limited Express'};
+const AL=[['海河','うみかわ','Umikawa','R'],['山王','さんのう','Sanno','L'],['駒ヶ野','こまがの','Komagano','L'],['京町','けいまち','Keimachi','L'],['九良賀野','くらがの','Kuragano','L'],['柴谷','しばたに','Sibatani','R'],['神谷町','かみやちょう','Kamiyacho','L'],['青木ヶ原','あおきがはら','Aokigahara','L']];
+const ARR={NT,NS,A:AL};
+const LN={NT:{t:['奈留都線','なるとせん','Naruto Line'],c:'#0b62b5'},NS:{t:['荒川線','あらかわせん','Arakawa Line'],c:'#13944a'},A:{t:['青海線','あおみせん','Aomi Line'],c:'#17a398'}};
+const TY={local:{t:['各駅停車','かくえきていしゃ','Local'],bg:'#8a8a8a'},futsu:{t:['普通','ふつう','Local'],bg:'#8a8a8a'},rapid:{t:['快速','かいそく','Rapid'],bg:'#f08300'},srapid:{t:['新快速','しんかいそく','Special Rapid'],bg:'#1d7fe0'},rexp:{t:['快速急行','かいそくきゅうこう','Rapid Express'],bg:'#12a0e8'},ltd:{t:['特急','とっきゅう','Limited Exp.'],bg:'#d7262c'}};
+const TYE={local:'local train',futsu:'local train',rapid:'Rapid Service',srapid:'Special Rapid Service',rexp:'Rapid Express',ltd:'Limited Express'};
 const XF={'NT:青木ヶ原':['NS','A'],'NT:上沢':['NS'],'NS:青木ヶ原':['NT','A'],'NS:上沢':['NT'],'A:青木ヶ原':['NT','NS']};
 const SD={L:['左','left'],R:['右','right']};
 const JR='【JR東日本 運行情報　10月12日14時59分現在】　山手線：渋谷駅での人身事故の影響で、内回りで運転見合わせ（15時00分頃再開見込）　／　湘南新宿ライン：山手線内の人身事故の影響で運転見合わせ（15時00分頃再開見込）　／　相鉄線直通列車：新宿～羽沢横浜国大間で運転見合わせ（15時00分頃再開見込）　／　京浜東北線：上下線の一部列車に遅れ。大宮方面は快速運転を中止し各駅に停車　／　埼京線：新宿～大崎間で運転見合わせ（15時00分頃再開見込）　／　川越線：埼京線への直通運転を中止　／　総武本線：台風25号の影響で八街～成東間は終日運転見合わせ、バス代行輸送　／　内房線：台風25号の影響で姉ケ崎～長浦間は終日運転見合わせ、バス代行輸送　／　久留里線：台風25号の影響で久留里～上総亀山間は終日運転見合わせ　／　その他の路線は平常運転';
 const PS=['この電車には、優先席があります。優先席を必要とされるお客様がいらっしゃいましたら、席をお譲りください。お客様のご協力をお願いいたします。お客様にお願いいたします。優先席付近では、携帯電話の電源をお切りください。それ以外の場所では、マナーモードに設定のうえ、通話はお控えください。ご協力をお願いいたします。','There are priority seats in most cars. Please offer your seat to those who may need it. Please switch off your mobile phone when you are near the priority seats. In other areas, please set it to silent mode and refrain from talking on the phone.'];
 const SS=['お客様にお願いいたします。電車は事故防止のため、やむを得ず急停車することがありますので、お立ちのお客様は、つり革や手すりにおつかまりください。','It may be necessary for the train to stop suddenly to prevent an accident. So please be careful.'];
 const rg=(a,b)=>{const r=[];for(let i=a;i<=b;i++)r.push(i);return r};
-function mk(c,n,ty){const d=c==='NT'?NT[n-1]:c==='NS'?NS[n-1]:AL[n];return{t:[d[0],d[1],d[2]],door:d[3],code:c,num:n,line:c,type:ty}}
-const PAT={local:rg(1,14),rapid:[1,4,5,7,9,10,13,14],srapid:[1,4,5,9,10,13,14],ltd:[1,4,10,13,14]};
+function mk(c,n,ty){const d=ARR[c][n-1];return{t:[d[0],d[1],d[2]],door:d[3],code:c,num:n,line:c,type:ty}}
+const PAT={local:rg(1,14),rapid:[1,3,4,5,6,7,9,10,13,14],srapid:[1,4,5,7,10,13,14],ltd:[1,4,10,13,14]};
 const SV=[];
 for(const ty of ['local','rapid','srapid','ltd']){SV.push({l:'奈留都線 '+TY[ty].t[0]+' 浅井行き',s:PAT[ty].map(n=>mk('NT',n,ty))});SV.push({l:'奈留都線 '+TY[ty].t[0]+' 奈留都行き',s:[...PAT[ty]].reverse().map(n=>mk('NT',n,ty))})}
-SV.push({l:'仙山線 各駅停車 山砥行き',s:rg(1,9).map(n=>mk('NS',n,'local'))});
-SV.push({l:'仙山線 各駅停車 仙ヶ家行き',s:rg(1,9).reverse().map(n=>mk('NS',n,'local'))});
-SV.push({l:'青海線直通 浅井行き（海河→浅井）',s:[mk('A',1,'rapid'),mk('A',6,'rapid'),mk('A',11,'rapid'),...rg(5,14).map(n=>mk('NT',n,'local'))]});
-SV.push({l:'青海線直通 海河行き（浅井→海河）',s:[...rg(4,14).reverse().map(n=>mk('NT',n,'local')),mk('A',6,'rapid'),mk('A',1,'rapid')]});
+SV.push({l:'荒川線 各駅停車 山砥行き',s:rg(1,9).map(n=>mk('NS',n,'local'))});
+SV.push({l:'荒川線 各駅停車 仙ヶ家行き',s:rg(1,9).reverse().map(n=>mk('NS',n,'local'))});
+SV.push({l:'青海線直通 全停 浅井行き（海河→浅井）',s:[...rg(1,8).map(n=>mk('A',n,'futsu')),...rg(5,14).map(n=>mk('NT',n,'local'))]});
+SV.push({l:'青海線直通 全停 海河行き（浅井→海河）',s:[...rg(4,14).reverse().map(n=>mk('NT',n,'local')),...rg(1,7).reverse().map(n=>mk('A',n,'futsu'))]});
+SV.push({l:'青海線直通 快速 浅井行き（海河→浅井）',s:[...[1,2,4,5,6,8].map(n=>mk('A',n,'rapid')),...[5,6,7,9,10,13,14].map(n=>mk('NT',n,'rapid'))]});
+SV.push({l:'青海線直通 快速 海河行き（浅井→海河）',s:[...[14,13,10,9,7,6,5,4].map(n=>mk('NT',n,'rapid')),...[6,5,4,2,1].map(n=>mk('A',n,'rapid'))]});
+SV.push({l:'青海線 快速急行 青木ヶ原行き（海河→青木ヶ原）',s:[1,2,5,6,8].map(n=>mk('A',n,'rexp'))});
+SV.push({l:'青海線 快速急行 海河行き（青木ヶ原→海河）',s:[8,6,5,2,1].map(n=>mk('A',n,'rexp'))});
 const cd=s=>s.code+' '+String(s.num).padStart(2,'0');
 const an=w=>/^[AEIOU]/.test(w)?'an '+w:'a '+w;
 const eor=a=>a.length<2?a.join(''):a.length===2?a[0]+' or '+a[1]:a.slice(0,-1).join(', ')+', or '+a[a.length-1];
 const xfJ=s=>{const x=XF[s.code+':'+s.t[0]]||[];return x.length?x.map(c=>LN[c].t[0]).join('、')+'は、お乗り換えです。':''};
 const xfE=s=>{const x=XF[s.code+':'+s.t[0]]||[];return x.length?' Please change here for '+x.map(c=>'the '+LN[c].t[2]).join(' and ')+'.':''};
 const thx=ty=>ty==='ltd'?'traveling on':'using';
-function between(a,b){if(a.code!==b.code||a.code==='A')return[];const arr=a.code==='NT'?NT:NS;const lo=Math.min(a.num,b.num),hi=Math.max(a.num,b.num);let r=[];for(let n=lo+1;n<hi;n++)r.push(arr[n-1]);if(a.num>b.num)r.reverse();return r}
+function nb(code,num,sz,gray){const c=gray?'#aaa':LN[code].c,n=String(num).padStart(2,'0');
+if(code==='A')return'<div style="width:'+sz+'cqw;height:'+sz+'cqw;border-radius:50%;border:'+(sz*.09)+'cqw solid '+c+';background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;flex-shrink:0;color:'+(gray?'#aaa':'#333')+'"><span style="font-size:'+(sz*.24)+'cqw;color:'+c+'">'+code+'</span><span style="font-size:'+(sz*.42)+'cqw;font-weight:500">'+n+'</span></div>';
+return'<div style="width:'+sz+'cqw;height:'+(sz*1.05)+'cqw;border:'+(sz*.07)+'cqw solid '+c+';border-radius:'+(sz*.1)+'cqw;background:#fff;display:flex;flex-direction:column;overflow:hidden;line-height:1;flex-shrink:0"><span style="background:'+c+';color:#fff;font-size:'+(sz*.26)+'cqw;font-weight:700;height:40%;display:flex;align-items:center;justify-content:center">'+code+'</span><span style="flex:1;display:flex;align-items:center;justify-content:center;font-size:'+(sz*.44)+'cqw;font-weight:500;color:'+(gray?'#aaa':'#111')+'">'+n+'</span></div>'}
+function between(a,b){if(a.code!==b.code)return[];const arr=ARR[a.code];const lo=Math.min(a.num,b.num),hi=Math.max(a.num,b.num);let r=[];for(let n=lo+1;n<hi;n++)r.push(arr[n-1]);if(a.num>b.num)r.reverse();return r}
 function chg(S,b,i){const last=S.length-1,d=S[last];if(i+1<=last&&S[i+1].line!==b.line){const n=S[i+1];return['この電車は、'+b.t[0]+'から'+LN[n.line].t[0]+'に入り、'+TY[n.type].t[0]+'、'+d.t[0]+'行きとなります。',' From '+b.t[2]+', this train will become '+an(LN[n.line].t[2])+' '+TYE[n.type]+' bound for '+d.t[2]+'.']}return['','']}
-function dep(S,i){const last=S.length-1,a=S[i],b=S[i+1],d=S[last],ty=b.type,ln=LN[b.line];let J='',E='';const nl=i>0&&b.line!==a.line;
+const KSE={futsu:'Local',local:'Local',rapid:'Rapid',srapid:'Special Rapid',rexp:'Rapid Express',ltd:'Limited Express'};
+const xfJA=s=>{const x=XF[s.code+':'+s.t[0]]||[];return x.length?x.map(c=>LN[c].t[0]).join('、')+'はお乗り換えください。':''};
+const xfEA=s=>{const x=XF[s.code+':'+s.t[0]]||[];return x.length?' Please transfer here for '+x.map(c=>'the '+LN[c].t[2]).join(' and ')+'.':''};
+const sn=s=>s.code+String(s.num).padStart(2,'0');
+function depA(S,i){const last=S.length-1,a=S[i],b=S[i+1],d=S[last],ty=b.type,tm=i+1===last,nl=i===0||a.line!==b.line;let J='',E='';
+if(nl){J+='本日も中谷交通 青海線をご利用いただきまして、ありがとうございます。';E+='Thank you for using the Aomi Line.';let th=null;for(let j=i+2;j<=last;j++)if(S[j].line!==b.line){th=S[j];break}
+J+='この電車は、'+(th?LN[th.line].t[0]+'直通、':'')+TY[ty].t[0]+'、'+d.t[0]+'行きです。';E+=' This is the '+KSE[ty]+' train bound for '+d.t[2]+'.';
+if(th){J+=LN[th.line].t[0]+'内は、'+TY[th.type].t[0]+'となります。';E+=' This train runs through to the '+LN[th.line].t[2]+' and will run as '+an(TYE[th.type])+' on the '+LN[th.line].t[2]+'.'}}
+const sk=between(a,b);if(sk.length){J+='途中、'+sk.map(x=>x[0]).join('、')+'には止まりません。';E+=' This train does not stop at '+eor(sk.map(x=>x[2]))+'.'}
+J+='次は、'+(tm?'終点、':'')+b.t[0]+'です。'+xfJA(b);E+=' The next stop is '+b.t[2]+(tm?', the last stop':'')+', station number '+sn(b)+'.'+xfEA(b);
+const c=chg(S,b,i+1);J+=c[0];E+=c[1];
+if(tm){J+='お忘れ物のございませんよう、ご注意ください。';E+=' Please remember to take all your belongings with you.'}
+return[J,E.trim()]}
+function soonAo(S,i){const last=S.length-1,b=S[i],tm=i===last;let J='まもなく、'+(tm?'終点、':'')+b.t[0]+'です。お出口は'+SD[b.door][0]+'側です。'+xfJA(b);let E=(tm?'We will soon arrive at '+b.t[2]+', the last stop.':'We will soon make a brief stop at '+b.t[2]+'.')+' The doors on the '+SD[b.door][1]+' side will open.'+xfEA(b);const c=chg(S,b,i);J+=c[0];E+=c[1];if(tm){J+='お忘れ物のございませんよう、ご注意ください。本日も中谷交通をご利用いただきまして、ありがとうございました。';E+=' Please remember to take all your belongings with you. Thank you for using the Aomi Line.'}return[J,E]}
+function dep(S,i){if(S[i+1].line==='A')return depA(S,i);const last=S.length-1,a=S[i],b=S[i+1],d=S[last],ty=b.type,ln=LN[b.line];let J='',E='';const nl=i>0&&b.line!==a.line;
 if(i===0||nl){J+='今日も'+ln.t[0]+'をご利用くださいまして、ありがとうございます。';E+='Thank you for '+thx(ty)+' the '+ln.t[2]+'.';let th=null;for(let j=i+2;j<=last;j++)if(S[j].line!==b.line){th=S[j];break}
 if(th){J+='この電車は、'+LN[th.line].t[0]+'直通、'+d.t[0]+'行きです。'+ln.t[0]+'内は'+TY[ty].t[0]+'、'+LN[th.line].t[0]+'内は'+TY[th.type].t[0]+'となります。';E+=' This is the '+TYE[ty]+' bound for '+d.t[2]+', going through to the '+LN[th.line].t[2]+'. This train will run as '+an(TYE[th.type])+' on the '+LN[th.line].t[2]+'.'}
 else{J+='この電車は、'+TY[ty].t[0]+'、'+d.t[0]+'行きです。';E+=' This is the '+TYE[ty]+' bound for '+d.t[2]+'.';if(ty!=='local'&&i===0){const st=S.slice(1);J+='停車駅は、'+st.map((s,k)=>k===st.length-1?'終点、'+s.t[0]:s.t[0]).join('、')+'です。';E+=' We will be stopping at '+st.slice(0,-1).map(s=>s.t[2]).join(', ')+', and '+d.t[2]+', the terminal.'}}}
@@ -147,7 +169,7 @@ const tm=i+1===last;J+='次は、'+(tm?'終点、':'')+b.t[0]+'、'+b.t[0]+'。�
 const c=chg(S,b,i+1);J+=c[0];E+=c[1];
 if(tm){J+='お忘れ物のないよう、ご注意ください。今日も'+ln.t[0]+'をご利用くださいまして、ありがとうございました。';E+=' Please make sure you have all your belongings with you. Thank you for '+thx(ty)+' the '+ln.t[2]+'.'}
 return[J,E.trim()]}
-function soonA(S,i){const last=S.length-1,b=S[i],tm=i===last;let J='まもなく、'+(tm?'終点、':'')+b.t[0]+'、'+b.t[0]+'。お出口は、'+SD[b.door][0]+'側です。'+xfJ(b);let E='We will soon be arriving at '+b.t[2]+', '+cd(b)+(tm?', the terminal':'')+'. The doors on the '+SD[b.door][1]+' side will open.'+xfE(b);const c=chg(S,b,i);J+=c[0];E+=c[1];if(tm){J+='お忘れ物のないよう、ご注意ください。';E+=' Please make sure you have all your belongings with you.'}return[J,E]}
+function soonA(S,i){if(S[i].line==='A')return soonAo(S,i);const last=S.length-1,b=S[i],tm=i===last;let J='まもなく、'+(tm?'終点、':'')+b.t[0]+'、'+b.t[0]+'。お出口は、'+SD[b.door][0]+'側です。'+xfJ(b);let E='We will soon be arriving at '+b.t[2]+', '+cd(b)+(tm?', the terminal':'')+'. The doors on the '+SD[b.door][1]+' side will open.'+xfE(b);const c=chg(S,b,i);J+=c[0];E+=c[1];if(tm){J+='お忘れ物のないよう、ご注意ください。';E+=' Please make sure you have all your belongings with you.'}return[J,E]}
 function manners(S){const n=S.length-1,m={},a=Math.max(1,Math.floor(n/3)),b=Math.floor(2*n/3);if(a<n-1)m[a]=PS;if(b<n-1&&b!==a)m[b]=SS;return m}
 const IC={
 seat:'<rect x="14" y="58" width="40" height="8" rx="2"/><rect x="46" y="30" width="8" height="36" rx="2"/><rect x="18" y="66" width="6" height="18"/><rect x="44" y="66" width="6" height="18"/><circle cx="32" cy="24" r="7"/><path d="M26 34h12l4 22H22z"/><circle cx="74" cy="22" r="7"/><path d="M68 32h12l3 26h-5l-2 26h-5l-1-24h-1l-1 24h-5l-2-26h-5z"/><path d="M86 40l6 44" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>',
@@ -165,23 +187,24 @@ const $=id=>document.getElementById(id);
 SV.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=v.l;$('sv').appendChild(o)});
 function fit(el,mx,mn){let f=mx;el.style.fontSize=f+'cqw';while(el.scrollWidth>el.clientWidth+1&&f>mn){f-=.25;el.style.fontSize=f+'cqw'}}
 const NTX=i=>120+(i-1)*104;
-const NSP={1:[564,705],2:[564,640],3:[564,570],4:[564,500],5:[564,430],6:[564,352],7:[404,352],8:[404,175],9:[404,60]};
-const AP={1:[90,470],6:[250,470],11:[404,352]};
-const pos=s=>s.code==='NT'?(s.num===4?[418,341]:s.num===5?[550,341]:[NTX(s.num),330]):s.code==='NS'?(s.num===6?[550,341]:s.num===7?[418,341]:NSP[s.num]):(s.num===11?[418,341]:AP[s.num]);
+const NSP={1:[560,705],2:[560,640],3:[560,575],4:[560,510],5:[560,440],6:[536,350],7:[432,350],8:[370,105],9:[370,40]};
+const AP={1:[240,705],2:[240,658],3:[240,611],4:[240,564],5:[240,517],6:[240,470],7:[240,423],8:[432,370]};
+const pos=s=>s.code==='NT'?[NTX(s.num),330]:s.code==='NS'?NSP[s.num]:AP[s.num];
 function lbl(txt,x,y,up){if(L===2)return'<text transform="translate('+x+','+y+') rotate(-55)" font-size="22" fill="#111">'+txt+'</text>';const ch=[...txt];return ch.map((c,i)=>'<text x="'+x+'" y="'+(up?y-(ch.length-1-i)*29:y+i*29)+'" font-size="27" text-anchor="middle" fill="#111">'+c+'</text>').join('')}
 function mapSVG(S){let g='<svg viewBox="0 0 1600 730" style="width:100%;height:100%;display:block">';
 g+='<text x="40" y="70" font-size="42" fill="#111">'+['路線図','ろせんず','Route map'][L]+'</text>';
-g+='<line x1="'+NTX(1)+'" y1="330" x2="'+NTX(14)+'" y2="330" stroke="'+LN.NT.c+'" stroke-width="14"/>';
-g+='<path d="M404 60V352H564V705" stroke="'+LN.NS.c+'" stroke-width="14" fill="none"/>';
-g+='<path d="M404 352L330 470H90" stroke="'+LN.A.c+'" stroke-width="14" fill="none"/>';
-[[432,330,404,352],[536,330,564,352]].forEach(q=>{g+='<line x1="'+q[0]+'" y1="'+q[1]+'" x2="'+q[2]+'" y2="'+q[3]+'" stroke="#111" stroke-width="34" stroke-linecap="round"/><line x1="'+q[0]+'" y1="'+q[1]+'" x2="'+q[2]+'" y2="'+q[3]+'" stroke="#fff" stroke-width="22" stroke-linecap="round"/>'});
-const dot=(x,y)=>'<circle cx="'+x+'" cy="'+y+'" r="11" fill="#fff" stroke="#111" stroke-width="5"/>';
+g+='<line x1="'+NTX(1)+'" y1="330" x2="'+NTX(14)+'" y2="330" stroke="'+LN.NT.c+'" stroke-width="12"/>';
+g+='<path d="M370 40V350H560V705" stroke="'+LN.NS.c+'" stroke-width="12" fill="none"/>';
+g+='<path d="M432 370H240V705" stroke="'+LN.A.c+'" stroke-width="12" fill="none"/>';
+[[432,330,432,370],[536,330,536,350]].forEach(q=>{g+='<line x1="'+q[0]+'" y1="'+q[1]+'" x2="'+q[2]+'" y2="'+q[3]+'" stroke="#111" stroke-width="32" stroke-linecap="round"/><line x1="'+q[0]+'" y1="'+q[1]+'" x2="'+q[2]+'" y2="'+q[3]+'" stroke="#fff" stroke-width="20" stroke-linecap="round"/>'});
+const dot=(x,y)=>'<circle cx="'+x+'" cy="'+y+'" r="10" fill="#fff" stroke="#111" stroke-width="5"/>';
+const fs=L===2?22:27;
 NT.forEach((d,i)=>{const x=NTX(i+1);if(i!==3&&i!==4)g+=dot(x,330);g+=lbl(d[L],x,300,true)});
-[1,2,3,4,5,8,9].forEach(n=>{const p=NSP[n];g+=dot(p[0],p[1]);g+='<text x="'+(n>7?p[0]-26:p[0]+26)+'" y="'+(p[1]+9)+'" font-size="'+(L===2?22:27)+'" text-anchor="'+(n>7?'end':'start')+'" fill="#111">'+NS[n-1][L]+'</text>'});
-[1,6].forEach(n=>{const p=AP[n];g+=dot(p[0],p[1]);g+='<text x="'+p[0]+'" y="'+(p[1]+46)+'" font-size="'+(L===2?22:27)+'" text-anchor="middle" fill="#111">'+AL[n][L]+'</text>'});
+[1,2,3,4,5,8,9].forEach(n=>{const p=NSP[n],r=true;g+=dot(p[0],p[1]);g+='<text x="'+(r?p[0]+26:p[0]-26)+'" y="'+(p[1]+9)+'" font-size="'+fs+'" text-anchor="'+(r?'start':'end')+'" fill="#111">'+NS[n-1][L]+'</text>'});
+[1,2,3,4,5,6,7].forEach(n=>{const p=AP[n];g+=dot(p[0],p[1]);g+='<text x="'+(p[0]-26)+'" y="'+(p[1]+9)+'" font-size="'+fs+'" text-anchor="end" fill="#111">'+AL[n-1][L]+'</text>'});
 [['NT',1180,560],['NS',1180,610],['A',1180,660]].forEach(q=>{g+='<rect x="'+q[1]+'" y="'+(q[2]-10)+'" width="60" height="14" fill="'+LN[q[0]].c+'"/><text x="'+(q[1]+75)+'" y="'+(q[2]+4)+'" font-size="26" fill="#111">'+LN[q[0]].t[L]+'</text>'});
 let p=pos(S[t]);if(ph!=='stop'&&t>0){const a=pos(S[t-1]);p=[(a[0]+p[0])/2,(a[1]+p[1])/2]}
-g+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="26" fill="none" stroke="#e8382f" stroke-width="8" style="animation:pl 1s steps(1) infinite"/><text x="'+p[0]+'" y="'+(p[1]+62)+'" font-size="24" text-anchor="middle" fill="#e8382f">'+['現在地','げんざいち','Now'][L]+'</text>';
+g+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="26" fill="none" stroke="#e8382f" stroke-width="8" style="animation:pl 1s steps(1) infinite"/><text x="'+(p[0]+34)+'" y="'+(p[1]+10)+'" font-size="24" font-weight="700" fill="#e8382f" stroke="#fff" stroke-width="7" paint-order="stroke">'+['現在地','げんざいち','Now'][L]+'</text>';
 return g+'</svg>'}
 function doorHTML(tg){const open=tg.door===side;
 const leaf=(r)=>'<div class="'+(open?(r?'dr':'dl'):'')+'" style="position:absolute;top:0;'+(r?'left:50%;border-left':'left:0;border-right')+':.25cqw solid #5f656b;width:50%;height:100%;background:#a9afb5"><div style="position:absolute;left:20%;right:20%;top:8%;height:44%;background:#e3eaf0;border:.3cqw solid #5f656b"></div></div>';
@@ -191,31 +214,120 @@ return '<div style="background:#eef1f5;color:'+(open?'#1f3fd1':'#555')+';font-si
 '<div style="width:40cqw;height:24cqw;border:1cqw solid #4a4f55;border-bottom:none;position:relative;overflow:hidden;background:#fff">'+
 '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#d7262c;font-weight:500;font-size:2.8cqw;line-height:1.4;text-align:center">足元に<br>ご注意ください<span style="font-size:1.8cqw;margin-top:.6cqw">Please watch your step</span></div>'+leaf(false)+leaf(true)+'</div>'+
 (open?'<div class="arw" style="margin-bottom:8cqw"></div>':'<div style="width:13cqw"></div>')+'</div>'}
+const passes=(a,b)=>{if(a.code!==b.code)return[];const r=[],st=a.num<b.num?1:-1;for(let n=a.num+st;n!==b.num;n+=st)r.push(mk(a.code,n,b.type));return r};
+function fullPath(S){const F=[];S.forEach((s,i)=>{if(i>0)passes(S[i-1],s).forEach(x=>F.push({s:x,stop:false}));F.push({s,stop:true,i})});return F}
+const XS={NT:['奈留都線','なるとせん','Naruto'],NS:['荒川線','あらかわせん','Arakawa'],A:['青海線','あおみせん','Aomi']};
+const xfHTML=(x,Lx,col)=>x.map(q=>'<div style="display:flex;align-items:center;gap:.35cqw;font-size:'+(Lx===0?1.5:Lx===1?1.25:1.4)+'cqw;white-space:nowrap;color:'+col+'"><span style="border:.22cqw solid '+LN[q].c+';color:'+LN[q].c+';background:#fff;font-size:1.2cqw;font-weight:600;padding:0 .25cqw;border-radius:.3cqw;line-height:1.3">'+q+'</span>'+XS[q][Lx]+'</div>').join('');
+function vname(n,Lx,h,mx,col,wt){if(Lx===2){const fs=Math.min(2.2,h/(n.length*.58));return'<div class="vt" style="font-size:'+fs+'cqw;color:'+col+';font-weight:'+wt+'">'+n+'</div>'}
+const ch=[...n],fs=Math.min(mx,h/Math.max(ch.length,3));return'<div style="height:'+h+'cqw;display:flex;flex-direction:column;justify-content:'+(ch.length===1?'center':'space-between')+';align-items:center;font-size:'+fs+'cqw;font-weight:'+wt+';line-height:1;color:'+col+'">'+ch.map(q=>'<span>'+q+'</span>').join('')+'</div>'}
+const xfList=s=>XF[s.code+':'+s.t[0]]||[];
+function xfScreen(s,narrow){const x=xfList(s);
+return'<div style="flex:1;background:#d8e8f7;display:flex;flex-direction:column;align-items:'+(narrow?'stretch':'center')+';padding:1.4cqw 2cqw;min-width:0'+(narrow?';border-left:.3cqw solid #b7cbe0':'')+'"><div style="align-self:center;background:#1f5fae;color:#fff;border-radius:2cqw;padding:.3cqw 2cqw;font-size:1.9cqw;font-weight:600;white-space:nowrap">おのりかえのご案内 <span style="font-weight:400">Transfer</span></div>'+
+'<div style="display:flex;flex-direction:column;gap:'+(narrow?1.4:1.8)+'cqw;margin-top:'+(narrow?2:2.6)+'cqw;'+(narrow?'':'min-width:46cqw')+'">'+x.map(q=>'<div style="display:flex;align-items:center;gap:1.6cqw"><span style="width:3.4cqw;height:3.4cqw;background:'+LN[q].c+';flex-shrink:0;border-radius:.3cqw;color:#fff;font-size:1.5cqw;font-weight:700;display:flex;align-items:center;justify-content:center">'+q+'</span><div style="min-width:0"><div style="font-size:'+(narrow?3:3.6)+'cqw;font-weight:600;line-height:1.1;color:#111;white-space:nowrap">'+LN[q].t[0]+'</div><div style="font-size:1.6cqw;color:#333;white-space:nowrap">'+LN[q].t[2]+'</div></div></div>').join('')+'</div></div>'}
+const PIC={st:'<path d="M2 20h5v-5h5v-5h5V5h5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/>',es:'<path d="M2 20h5l10-12h5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M6 18l10-12" stroke="currentColor" stroke-width="1.2"/>',el:'<rect x="3" y="2" width="18" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M8 10l4-5 4 5zM8 14l4 5 4-5z" fill="currentColor"/>'};
+const pic=(k,c)=>'<svg viewBox="0 0 24 24" style="width:3cqw;height:3cqw;color:'+c+'">'+PIC[k]+'</svg>';
+function pfData(s){let z=s.num*7;for(const ch of s.code)z+=ch.charCodeAt(0);const a=1+z%3,b=4+(z>>1)%3,el=[2,3,5,4][z%4];return{st:[a,b],es:b===6?5:b+0,el,xf:a}}
+function pfScreen(s,w){const D=pfData(s),x=xfList(s),cars=[1,2,3,4,5,6],ME=4;
+const cell=n=>{let ic='';if(D.st.includes(n))ic+=pic('st','#333');if(D.es===n)ic+=pic('es','#333');if(D.el===n)ic+=pic('el','#1f5fae');if(x.length&&D.xf===n)ic+='<div style="display:flex;gap:.25cqw;align-items:center">'+x.map(q=>'<span style="background:'+LN[q].c+';color:#fff;font-size:1.2cqw;font-weight:700;padding:0 .3cqw;border-radius:.2cqw">'+q+'</span>').join('')+'</div><span style="font-size:1.2cqw">乗換</span>';return ic};
+const sd=SD[s.door];
+return'<div style="flex:'+(w>9?'1':'1.45')+';background:#f4f6f8;display:flex;flex-direction:column;padding:1.2cqw 1.6cqw;min-width:0"><div style="display:flex;align-items:center;gap:1cqw;white-space:nowrap"><span style="background:#2b2b2b;color:#fff;border-radius:2cqw;padding:.3cqw 1.6cqw;font-size:1.8cqw;font-weight:600">ホームのご案内 <span style="font-weight:400">Platform</span></span><span style="flex:1"></span><span style="font-size:1.7cqw;color:#1f3fd1;font-weight:600">お出口 '+sd[0]+'側</span><span style="font-size:1.3cqw;color:#555">Doors on the '+sd[1]+'</span></div>'+
+'<div style="display:flex;align-items:center;gap:.6cqw;margin-top:1.4cqw"><span style="font-size:1.4cqw;color:#555;white-space:nowrap;width:'+(w*.9)+'cqw;flex-shrink:0">◀ 進行方向</span>'+cars.map(n=>'<div style="width:'+w+'cqw;height:5.4cqw;flex-shrink:0;border:.3cqw solid '+(n===ME?'#e8382f':'#7a8088')+';background:'+(n===ME?'#ffe9e7':'#fff')+';border-radius:'+(n===1?'2cqw .5cqw .5cqw .5cqw':'.5cqw')+';display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1"><span style="font-size:2.4cqw;font-weight:700;color:'+(n===ME?'#e8382f':'#111')+'">'+n+'</span><span style="font-size:1.1cqw;color:#555">号車</span></div>').join('')+'</div>'+
+'<div style="display:flex;gap:.6cqw;margin-top:.3cqw"><span style="width:'+(w*.9)+'cqw;flex-shrink:0;font-size:1.3cqw;color:#e8382f;text-align:right;padding-top:.2cqw"></span>'+cars.map(n=>'<div style="width:'+w+'cqw;flex-shrink:0;text-align:center;font-size:1.3cqw;color:#e8382f;font-weight:600;white-space:nowrap">'+(n===ME?'▲ 現在位置':'')+'</div>').join('')+'</div>'+
+'<div style="display:flex;gap:.6cqw;margin-top:.6cqw;border-top:.25cqw dashed #b9c0c8;padding-top:.8cqw"><span style="width:'+(w*.9)+'cqw;flex-shrink:0;font-size:1.3cqw;color:#555">ホーム<br>Platform</span>'+cars.map(n=>'<div style="width:'+w+'cqw;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:.4cqw;font-size:1.2cqw;color:#222;white-space:nowrap">'+cell(n)+'</div>').join('')+'</div><div style="margin-top:auto;display:flex;gap:2cqw;align-items:center;font-size:1.4cqw;color:#333;white-space:nowrap;border-top:.2cqw solid #dde2e7;padding-top:.6cqw">'+[['st','#333','階段','Stairs'],['es','#333','エスカレーター','Escalator'],['el','#1f5fae','エレベーター','Elevator']].map(q=>'<span style="display:flex;align-items:center;gap:.4cqw"><span style="display:inline-flex;transform:scale(.75)">'+pic(q[0],q[1])+'</span>'+q[2]+(w>9?' <span style="color:#777;font-size:1.2cqw">'+q[3]+'</span>':'')+'</span>').join('')+'</div></div>'}
+function stopScreen(s){const D=pfData(s),x=xfList(s);let z=s.num*3;for(const ch of s.code)z+=ch.charCodeAt(0);
+const EX=['東口','西口','北口','南口','中央口'],EE={'東口':'East','西口':'West','北口':'North','南口':'South','中央口':'Central'},e1=EX[z%5],e2=EX[(z+2)%5];
+const CW=10.4,G=.5,X0=8,cx=n=>X0+(n-1)*(CW+G),ME=4;
+const box=(k,c)=>'<span style="display:inline-flex;width:3.6cqw;height:3.6cqw;background:#fff;border:.25cqw solid #333;align-items:center;justify-content:center">'+pic(k,c)+'</span>';
+let cars='',icons='',br='';
+for(let n=1;n<=6;n++){cars+='<div style="position:absolute;left:'+cx(n)+'cqw;top:0;width:'+CW+'cqw;height:4.4cqw;border-radius:.6cqw;background:'+(n===ME?'linear-gradient(#3f9a35,#2c7a24)':'linear-gradient(#a8de8f,#6fc05a)')+';border:.25cqw solid #3d7d33;display:flex;align-items:center;justify-content:center;font-size:2.8cqw;font-weight:700;color:'+(n===ME?'#fff':'#1d3b18')+'">'+n+'</div>';
+let ic=[];if(D.es===n)ic.push(box('es','#333'));if(D.el===n)ic.push(box('el','#1f5fae'));if(D.st.includes(n))ic.push(box('st','#333'));
+if(ic.length)icons+='<div style="position:absolute;left:'+cx(n)+'cqw;width:'+CW+'cqw;top:1.4cqw;display:flex;justify-content:center;gap:.4cqw">'+ic.join('')+'</div>'}
+const ex=(n,name,xfl)=>'<div style="position:absolute;left:'+(cx(n)-2)+'cqw;width:'+(CW+4)+'cqw;top:0;text-align:center"><div style="height:.9cqw;border:.2cqw solid #444;border-top:none"></div><div style="font-size:1.6cqw;font-weight:600;color:#111;margin-top:.2cqw;white-space:nowrap">'+name+(xfl?'<span style="font-size:1.3cqw;color:#1f5fae"> ・乗換</span>':'')+'</div><div style="font-size:1.1cqw;color:#444;white-space:nowrap;margin-top:.5cqw">'+EE[name]+' Exit</div></div>';
+br=ex(D.st[0],e1,x.length&&D.xf===D.st[0])+ex(D.st[1],e2,x.length&&D.xf===D.st[1]);
+const W=cx(6)+CW-X0+.4;
+const plat='<div style="position:relative;height:'+(x.length?21.5:31)+'cqw;padding-top:'+(x.length?3.6:7.5)+'cqw;flex-shrink:0">'+
+'<div style="position:relative;transform:none">'+
+'<div style="position:relative;height:4.4cqw">'+cars+'<div style="position:absolute;left:'+(cx(6)+CW+.6)+'cqw;top:.9cqw;width:3cqw;height:2.6cqw;background:#e8382f;clip-path:polygon(0 30%,55% 30%,55% 0,100% 50%,55% 100%,55% 70%,0 70%)"></div><div style="position:absolute;left:'+(cx(ME)+CW/2-3)+'cqw;top:-2.8cqw;width:6cqw;text-align:center;font-size:1.3cqw;color:#e8382f;font-weight:700;white-space:nowrap">▼現在位置</div></div>'+
+'<div style="position:relative;margin-left:'+(X0-.6)+'cqw;width:'+(W+.8)+'cqw;height:6.8cqw;background:#e9ecef;border:.25cqw solid #8a9097;border-top:.6cqw solid #e6c400;margin-top:.4cqw"><div style="position:absolute;left:'+(-X0+.6)+'cqw;right:0;top:0;bottom:0">'+icons+'</div></div>'+
+'<div style="position:relative;height:5cqw;margin-top:.3cqw">'+br+'</div></div>'+
+'<div style="position:absolute;right:2cqw;top:'+(x.length?.8:2.4)+'cqw;font-size:1.5cqw;color:#1f3fd1;font-weight:600;white-space:nowrap">お出口 '+SD[s.door][0]+'側 <span style="font-size:1.2cqw;font-weight:400">Doors on the '+SD[s.door][1]+'</span></div></div>';
+const xfp=x.length?'<div style="position:relative;flex:1;border-top:.2cqw solid #c3d3e2;padding:.8cqw 4cqw 0;display:flex;flex-direction:column;align-items:center"><div style="background:linear-gradient(#8fb8f0,#4f86d8);color:#fff;border-radius:2cqw;padding:.2cqw 3cqw;font-size:1.8cqw;font-weight:600;white-space:nowrap">のりかえのご案内</div><div style="display:flex;gap:5cqw;margin-top:.9cqw;align-self:flex-start;padding-left:4cqw">'+x.map(q=>'<div style="display:flex;align-items:center;gap:1cqw"><span style="width:2.8cqw;height:2.8cqw;border-radius:50%;border:.7cqw solid '+LN[q].c+';box-sizing:border-box;flex-shrink:0"></span><div><div style="font-size:3cqw;font-weight:700;line-height:1.1;color:#111;white-space:nowrap">'+LN[q].t[0]+'</div><div style="font-size:1.5cqw;color:#333;white-space:nowrap">'+LN[q].t[2]+'</div></div></div>').join('')+'</div></div>':'';
+return'<div style="flex:1;display:flex;flex-direction:column;background:linear-gradient(#cfd8e2,#e4ecf4 60%);min-height:0;overflow:hidden">'+plat+xfp+'</div>'}
+function originHTML(S,th,d){const s=S[0],ty=TY[s.type],lc=LN[s.line].c,now=new Date(),tm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+return'<div style="flex:1;display:flex;flex-direction:column;min-height:0;background:#fff">'+
+'<div style="height:19cqw;display:flex;flex-shrink:0;background:#262626">'+
+'<div style="width:27cqw;flex-shrink:0;background:'+lc+';clip-path:polygon(0 0,90% 0,100% 50%,90% 100%,0 100%);display:flex;flex-direction:column;justify-content:center;padding:0 4cqw 0 1.6cqw;gap:1.2cqw">'+
+'<div style="background:#fff;border-radius:.6cqw;text-align:center;font-size:'+(ty.t[0].length>2?3.3:4.2)+'cqw;font-weight:800;letter-spacing:'+(ty.t[0].length>2?.2:1.6)+'cqw;color:'+(ty.bg==='#8a8a8a'?'#333':ty.bg)+';padding:.3cqw 0 .3cqw '+(ty.t[0].length>2?.2:1.6)+'cqw;white-space:nowrap">'+ty.t[0]+'</div>'+
+'<div style="display:flex;align-items:flex-end;justify-content:center;gap:.8cqw;color:#fff;white-space:nowrap"><span style="font-size:3.4cqw;font-weight:700;letter-spacing:.8cqw">'+d.t[0]+'</span><span style="font-size:1.8cqw;font-weight:700">ゆき</span></div></div>'+
+'<div style="flex:1;min-width:0;display:flex;flex-direction:column;color:#fff;padding:1cqw 1.6cqw 0 1.4cqw">'+
+'<div style="display:flex;align-items:center;gap:1.4cqw;white-space:nowrap"><span style="font-size:2.8cqw;font-weight:700">ただいま</span><span style="flex:1"></span><span style="font-size:1.8cqw">現在時刻</span><span style="background:#fff;color:#111;font-size:2.4cqw;font-weight:700;padding:0 .6cqw;border-radius:.3cqw;letter-spacing:.2cqw">'+tm+'</span><span style="display:flex;flex-direction:column;align-items:center;line-height:1;margin-left:1cqw"><span style="background:#fff;color:#2b7a2b;font-size:3cqw;font-weight:800;padding:.1cqw .7cqw;border-radius:.3cqw">4</span><span style="font-size:1.4cqw;margin-top:.2cqw">号車</span></span></div>'+
+'<div style="flex:1;display:flex;align-items:center;gap:2cqw;min-width:0"><div style="background:#fff;border-radius:.6cqw;padding:.3cqw;flex-shrink:0">'+nb(s.code,s.num,7.4)+'</div><div id="ogn" style="flex:1;min-width:0;overflow:hidden;white-space:nowrap;font-weight:700;letter-spacing:3cqw;text-align:center">'+s.t[0]+'</div></div></div></div>'+
+'<div style="height:5cqw;flex-shrink:0;background:#d6d6d6;display:flex;align-items:center;justify-content:center;font-size:2.8cqw;color:#111;white-space:nowrap">発車までしばらくお待ちください</div>'+
+'<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 4cqw;min-height:0">'+
+(th?'<div style="font-size:3.4cqw;font-weight:700;color:#111;white-space:nowrap;margin-bottom:1.4cqw">この電車は '+LN[th].t[0]+' 直通</div>':'')+
+'<div style="display:flex;align-items:center;gap:4cqw"><div style="width:30cqw;height:14cqw;flex-shrink:0;background:#1a1a1a;color:#fff;border-radius:.4cqw;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15"><span style="font-size:'+(ty.t[0].length>3?4.6:5.6)+'cqw;font-weight:800;letter-spacing:'+(ty.t[0].length>3?.4:3)+'cqw;padding-left:'+(ty.t[0].length>3?.4:3)+'cqw;white-space:nowrap">'+ty.t[0]+'</span><span style="font-size:2.8cqw;font-weight:700;white-space:nowrap">'+ty.t[2]+'</span></div>'+
+'<div style="min-width:0;flex:1"><div style="display:flex;align-items:flex-end;gap:1.6cqw;white-space:nowrap"><span id="ogd" style="font-size:8.6cqw;font-weight:800;letter-spacing:1.6cqw;line-height:1.1">'+d.t[0]+'</span><span style="font-size:4cqw;font-weight:700;margin-bottom:.8cqw">行</span></div><div style="font-size:2.4cqw;font-weight:600;margin-top:.6cqw;padding-left:6cqw;white-space:nowrap">for <span style="font-size:3.2cqw;font-weight:800">'+d.t[2]+'</span></div></div></div></div></div>'}
+function departScreen(ty,d,th){const sp=[...ty.t[0]].join(ty.t[0].length<=2?'　':'');
+return'<div style="flex:1;display:flex;flex-direction:column;background:#fff;min-height:0"><div style="background:#e3e5e8;height:5cqw;display:flex;align-items:center;justify-content:center;font-size:2.9cqw;color:#222;flex-shrink:0;white-space:nowrap">発車までしばらくお待ちください <span style="font-size:1.7cqw;color:#555;margin-left:1.4cqw">Please wait for departure</span></div>'+
+'<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 4cqw;gap:1.6cqw"><div style="font-size:3.1cqw;color:#111;white-space:nowrap">この電車は'+(th?' '+LN[th].t[0]+' 直通':'')+'</div>'+
+'<div style="display:flex;align-items:center;gap:5cqw"><div style="background:#1e1e1e;color:#fff;border-radius:.5cqw;width:30cqw;height:15cqw;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;border-left:1.4cqw solid '+ty.bg+'"><span style="font-size:'+(ty.t[0].length>3?4.4:5.4)+'cqw;font-weight:700;white-space:nowrap">'+sp+'</span><span style="font-size:2.8cqw;font-weight:700;margin-top:.6cqw;white-space:nowrap">'+ty.t[2]+'</span></div>'+
+'<div style="min-width:0"><div style="white-space:nowrap"><span id="dpN" style="font-size:7.4cqw;font-weight:700;letter-spacing:1.2cqw;color:#111">'+d.t[0]+'</span><span style="font-size:3.6cqw;font-weight:600;margin-left:.6cqw">行</span></div><div style="font-size:2.6cqw;color:#111;margin-top:.4cqw;white-space:nowrap"><span style="font-size:2cqw">for </span><b>'+d.t[2]+'</b></div></div></div></div></div>'}
 function render(){
-const S=SV[sv].s,last=S.length-1,leg=ph==='stop'?Math.min(t+1,last):t,lg=S[leg],ln=LN[lg.line],ty=TY[lg.type],tg=S[t];
+const S=SV[sv].s,last=S.length-1,leg=ph==='stop'?Math.min(t+1,last):t,lg=S[leg],ln=LN[lg.line],ty=TY[lg.type],tg=S[t],ks=lg.line==='A',Lk=ks&&L===1?0:L;
 let th='';for(let j=leg+1;j<=last;j++){if(S[j].line!==lg.line){th=S[j].line;break}}
-const d=S[last];
-$('hd').innerHTML='<span style="background:'+ty.bg+';color:#fff;font-size:3.2cqw;padding:.3cqw 1.2cqw;border-radius:.6cqw;white-space:nowrap;font-weight:500">'+ty.t[L]+'</span>'+(th?'<span style="font-size:2.3cqw;white-space:nowrap">'+[LN[th].t[0]+'直通',LN[th].t[1]+'ちょくつう','Through to '+LN[th].t[2]][L]+'</span>':'')+'<span style="font-size:3.4cqw;white-space:nowrap;font-weight:500">'+(L===2?'<span style="font-size:2.2cqw">for </span>'+d.t[2]:d.t[L]+'<span style="margin-left:1.2cqw">ゆき</span>')+'</span><span style="flex:1"></span><span style="background:#2b2b2b;color:#fff;border-radius:.8cqw;width:5cqw;height:5cqw;display:flex;align-items:center;justify-content:center;font-size:3.6cqw;font-weight:500">4</span><span style="font-size:1.8cqw;align-self:flex-end;margin-bottom:.8cqw;margin-left:-1cqw">'+(L===2?'Car':'号車')+'</span>';
-const lab={next:['つぎは','つぎは','Next'],soon:['まもなく','まもなく','Arriving at'],stop:['ただいま','ただいま','Now at']}[ph][L];
-$('nx').innerHTML='<div style="width:30cqw;display:flex;align-items:center;justify-content:flex-end;gap:1.6cqw;padding-right:1cqw"><div style="text-align:right"><div style="font-size:3.6cqw;font-weight:500;white-space:nowrap">'+lab+'</div>'+(t===last?'<div style="font-size:2cqw;color:#d7262c;font-weight:500">'+['終点','しゅうてん','Terminal'][L]+'</div>':'')+'</div><div style="width:10.5cqw;height:10.5cqw;border-radius:50%;border:1cqw solid '+LN[tg.code].c+';display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;flex-shrink:0"><span style="font-size:2.6cqw;font-weight:500">'+tg.code+'</span><span style="font-size:3.6cqw;font-weight:500">'+String(tg.num).padStart(2,'0')+'</span></div></div><div id="nm" style="flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-align:center;font-weight:500;letter-spacing:1.5cqw;padding-right:2cqw"></div>';
+const d=S[last],F=fullPath(S),fi=i=>F.findIndex(e=>e.stop&&e.i===i);
+const lab={next:['つぎは','つぎは','Next'],soon:['まもなく','まもなく','Arriving at'],stop:['ただいま','ただいま','Now at']}[ph];
+if(ks){
+$('hd').style.background='#f4f5f6';
+$('hd').innerHTML='<div style="background:'+ty.bg+';color:#fff;border-radius:.4cqw;padding:.2cqw 1cqw;text-align:center;line-height:1.05;white-space:nowrap;flex-shrink:0">'+(Lk===2?'<div style="font-size:2.6cqw;font-weight:700">'+ty.t[2]+'</div>':'<div style="font-size:2.8cqw;font-weight:700;letter-spacing:.3cqw">'+ty.t[0]+'</div><div style="font-size:1.2cqw">'+ty.t[1]+'</div>')+'</div>'+
+'<div style="display:flex;align-items:center;gap:1cqw;min-width:0;flex:1;overflow:hidden;white-space:nowrap">'+nb(d.code,d.num,4.4)+(Lk===2?'<span style="font-size:2.2cqw">for </span><span style="font-size:3.4cqw;font-weight:600">'+d.t[2]+'</span>':'<span style="font-size:3.4cqw;font-weight:600">'+d.t[0]+'行</span><span style="font-size:1.8cqw">'+d.t[1]+'ゆき</span>')+(th?'<span style="font-size:1.8cqw;border:.2cqw solid #111;padding:0 .5cqw;border-radius:.3cqw">'+(Lk===2?'via '+LN[th].t[2]:LN[th].t[0]+'直通')+'</span>':'')+'</div>'+
+'<div style="border:.25cqw solid #bbb;background:#fff;padding:.1cqw .6cqw;line-height:1.05;text-align:center;flex-shrink:0"><div style="font-size:1.3cqw;color:#333">Car No.</div><div style="font-size:3cqw;font-weight:700">4<span style="font-size:1.5cqw;font-weight:500"> 号車</span></div></div>';
+$('nx').style.background='#141414';
+$('nx').innerHTML='<div style="width:20cqw;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff"><div style="font-size:3.4cqw;font-weight:600;white-space:nowrap;border-bottom:.45cqw solid #d7262c;padding:0 .6cqw .3cqw">'+lab[Lk]+'</div>'+(t===last?'<div style="font-size:1.8cqw;color:#ff6b6b;margin-top:.4cqw">'+['終点','しゅうてん','Terminal'][Lk]+'</div>':'')+'</div>'+
+'<div style="flex-shrink:0">'+nb(tg.code,tg.num,9)+'</div><div id="nm" style="flex:1;min-width:0;overflow:hidden;white-space:nowrap;color:#fff;padding:0 2cqw;display:flex;align-items:baseline;gap:1.4cqw"></div>';
+const nm=$('nm');nm.innerHTML='<span id="nmA" style="font-weight:700">'+tg.t[Lk===2?2:0]+'</span>'+(Lk===2?'':'<span id="nmB" style="font-size:2.6cqw;white-space:nowrap">'+tg.t[1]+'</span>');
+const a=$('nmA');let f=Lk===2?6.5:8.4;a.style.fontSize=f+'cqw';while(nm.scrollWidth>nm.clientWidth+1&&f>3){f-=.25;a.style.fontSize=f+'cqw'}
+$('dv').style.background='#141414';
+}else{
+$('hd').style.background='#f4f5f6';$('nx').style.background='';
+$('hd').innerHTML='<span style="background:'+ty.bg+';color:#fff;font-size:'+(L===1&&ty.t[1].length>6?2.4:3.2)+'cqw;padding:.3cqw 1.2cqw;border-radius:.6cqw;white-space:nowrap;font-weight:500;flex-shrink:0">'+ty.t[L]+'</span><span style="display:flex;align-items:center;gap:1.6cqw;min-width:0;flex:1;overflow:hidden;white-space:nowrap">'+(th?'<span style="font-size:2.3cqw">'+[LN[th].t[0]+'直通',LN[th].t[1]+'ちょくつう','Through to '+LN[th].t[2]][L]+'</span>':'')+'<span style="font-size:3.4cqw;font-weight:500">'+(L===2?'<span style="font-size:2.2cqw">for </span>'+d.t[2]:d.t[L]+'<span style="margin-left:1.2cqw">ゆき</span>')+'</span></span><span style="background:#2b2b2b;color:#fff;border-radius:.8cqw;width:5cqw;height:5cqw;display:flex;align-items:center;justify-content:center;font-size:3.6cqw;font-weight:500;flex-shrink:0">4</span><span style="font-size:1.8cqw;align-self:flex-end;margin-bottom:.8cqw;margin-left:-1cqw;flex-shrink:0">'+(L===2?'Car':'号車')+'</span>';
+$('nx').innerHTML='<div style="width:30cqw;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;gap:1.6cqw;padding-right:1cqw"><div style="text-align:right"><div style="font-size:3.6cqw;font-weight:500;white-space:nowrap">'+lab[L]+'</div>'+(t===last?'<div style="font-size:2cqw;color:#d7262c;font-weight:500">'+['終点','しゅうてん','Terminal'][L]+'</div>':'')+'</div>'+nb(tg.code,tg.num,10)+'</div><div id="nm" style="flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-align:center;font-weight:500;letter-spacing:1.5cqw;padding-right:2cqw"></div>';
 const nm=$('nm');nm.textContent=tg.t[L];if(L===2)nm.style.letterSpacing='0';fit(nm,L===2?7:9.5,3);
-$('dv').style.background=ln.c;
-if(em){doorBuilt=false;$('rb').innerHTML=emHTML}
+$('dv').style.background=ln.c}
+const og=false;$('hd').style.display=$('nx').style.display=og?'none':'flex';$('dv').style.display=og?'none':'';
+if(og){doorBuilt=false;$('rb').innerHTML=originHTML(S,th,d);const o=$('ogn');let f=9;o.style.fontSize=f+'cqw';while(o.scrollWidth>o.clientWidth+1&&f>4){f-=.25;o.style.fontSize=f+'cqw';o.style.letterSpacing=(f/3)+'cqw'}const g=$('ogd');let f2=8.6;while(g.parentElement.scrollWidth>g.parentElement.parentElement.clientWidth+1&&f2>4){f2-=.25;g.style.fontSize=f2+'cqw';g.style.letterSpacing='.6cqw'}}
+else if(em){doorBuilt=false;$('rb').innerHTML=emHTML}
+else if(t===0&&ph==='stop'&&mode!=='map'){doorBuilt=false;$('rb').innerHTML=departScreen(TY[lg.type],d,th);const n=$('dpN');if(n){let f=7.4;while(n.parentElement.scrollWidth>n.parentElement.clientWidth+1&&f>3.5){f-=.3;n.style.fontSize=f+'cqw';n.style.letterSpacing='0'}}}
 else if(mode==='mn'&&mnC){doorBuilt=false;$('rb').innerHTML=mannerHTML(mnC)}
+else if(mode==='xf'&&xfList(tg).length){doorBuilt=false;$('rb').innerHTML=xfScreen(tg)}
+else if(mode==='pf'&&ph==='stop'){doorBuilt=false;$('rb').innerHTML=stopScreen(tg)}
 else if(mode==='door'&&ph==='soon'){if(!doorBuilt){$('rb').innerHTML=doorHTML(tg);doorBuilt=true}}
-else{doorBuilt=false;const s0=ph==='stop'?t:t-1,cols=[];for(let k=s0;k<=Math.min(last,s0+7);k++)cols.push(k);
+else if(ks){doorBuilt=false;const s0=fi(ph==='stop'?t:t-1),cols=[];for(let k=s0;k<=Math.min(F.length-1,s0+6);k++)cols.push(k);
+let nr='',cr='',sq='',xr='';const W='width:12.6cqw;flex-shrink:0;display:flex;justify-content:center';
+cols.forEach((k,j)=>{const e=F[k],s=e.s,g=j===0&&ph!=='stop',cur=j===0&&ph==='stop',isT=e.stop&&e.i===t,pass=!e.stop,x=e.stop?(XF[s.code+':'+s.t[0]]||[]):[];
+const col=g?'#b5b5b5':pass?'#9a9a9a':'#111',wt=pass||g?500:800;
+nr+='<div style="'+W+'">'+vname(s.t[Lk===2?2:0],Lk,12,3.4,col,wt)+'</div>';
+cr+='<div style="'+W+';padding-top:.6cqw">'+nb(s.code,s.num,3.4,pass||g)+'</div>';
+const sc=pass?'':cur||(isT&&ph!=='stop')?'background:#d7262c;border:.2cqw solid #d7262c;'+(isT&&ph==='soon'?'animation:pl 1s steps(1) infinite;':''):g?'background:#ddd;border:.2cqw solid #bbb;':'background:#fff;border:.2cqw solid #888;';
+sq+='<div style="'+W+'">'+(sc?'<div style="width:3.4cqw;height:2cqw;'+sc+'"></div>':'')+'</div>';
+xr+='<div style="'+W+';flex-direction:column;align-items:center;gap:.3cqw;padding-top:.5cqw">'+xfHTML(x,Lk,'#111')+'</div>'});
+const A=ph==='stop'?S[t]:S[t-1],B=ph==='stop'?S[t+1]:S[t];
+const mini=s=>'<span style="display:inline-flex;vertical-align:middle;margin:0 .4cqw">'+nb(s.code,s.num,2.6)+'</span>';
+const bm=B?(Lk===2?'After '+mini(A)+A.t[2]+', this train stops at '+mini(B)+B.t[2]+'.':mini(A)+A.t[0]+' の次は '+mini(B)+B.t[0]+' にとまります。'):(Lk===2?'This is the last stop, '+A.t[2]+'.':'終点、'+mini(A)+A.t[0]+'です。');
+const R='display:flex;flex-direction:row-reverse;padding-right:2cqw';
+$('rb').innerHTML='<div style="flex:1;display:flex;flex-direction:column;background:#f2f4f6;min-height:0"><div style="'+R+';padding-top:1.2cqw">'+nr+'</div><div style="'+R+'">'+cr+'</div><div style="height:1.4cqw;background:#141414;margin-top:.8cqw"></div><div style="'+R+';padding-top:.6cqw">'+sq+'</div><div style="'+R+'">'+xr+'</div><div style="margin-top:auto;height:3.6cqw;display:flex;align-items:center;justify-content:center;gap:.4cqw;font-size:1.9cqw;color:#111;white-space:nowrap;border-top:.2cqw solid #d5d9de;background:#fff"><span style="width:2.4cqw;height:2.4cqw;border-radius:50%;background:#141414;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:1.7cqw;margin-right:.6cqw">!</span>'+bm+'</div></div>'}
+else{doorBuilt=false;const s0=fi(ph==='stop'?t:t-1),cols=[];for(let k=s0;k<=Math.min(F.length-1,s0+7);k++)cols.push(k);
 let nr='',br='',cr='',xr='';
-cols.forEach((k,j)=>{const s=S[k],g=j===0&&ph!=='stop',cur=j===0&&ph==='stop',isT=k===t,x=XF[s.code+':'+s.t[0]]||[],c=g?'#8f8f8f':LN[(j===0?(S[k+1]||s):s).line].c,tc=g?'#999':'#111',n=s.t[L];
-if(L===2){const fs=Math.min(2.2,12.5/(n.length*.56));nr+='<div class="col" style="display:flex;justify-content:center"><div class="vt" style="font-size:'+fs+'cqw;color:'+tc+'">'+n+'</div></div>'}
-else{const ch=[...n],fs=Math.min(3.2,12.5/Math.max(ch.length,3));nr+='<div class="col" style="display:flex;justify-content:center"><div style="height:12.5cqw;display:flex;flex-direction:column;justify-content:'+(ch.length===1?'center':'space-between')+';align-items:center;font-size:'+fs+'cqw;font-weight:500;line-height:1;color:'+tc+'">'+ch.map(q=>'<span>'+q+'</span>').join('')+'</div></div>'}
+cols.forEach((k,j)=>{const e=F[k],s=e.s,g=j===0&&ph!=='stop',cur=j===0&&ph==='stop',isT=e.stop&&e.i===t,pass=!e.stop,x=e.stop?(XF[s.code+':'+s.t[0]]||[]):[],nx2=F[k+1],c=g?'#8f8f8f':LN[(j===0&&nx2?nx2.s:s).line].c,tc=g?'#999':pass?'#a0a0a0':'#111';
+nr+='<div class="col" style="display:flex;justify-content:center">'+vname(s.t[L],L,12.5,3.2,tc,500)+'</div>';
 let mk_;
 if(cur)mk_='<div style="position:absolute;left:.6cqw;width:9.6cqw;top:-.4cqw;height:5.8cqw;background:#e8382f;clip-path:polygon(0 0,72% 0,100% 50%,72% 100%,0 100%)"></div><div style="position:absolute;left:50%;top:50%;width:2.6cqw;height:2.6cqw;transform:translate(-50%,-50%);border-radius:50%;background:#fff"></div>';
+else if(pass)mk_='<div style="position:absolute;left:50%;top:50%;width:2cqw;height:3cqw;transform:translate(-50%,-50%);background:#fff;clip-path:polygon(0 0,45% 0,100% 50%,45% 100%,0 100%,55% 50%)"></div>';
 else{const dsz=g?1.8:4.2;mk_='<div style="position:absolute;left:50%;top:50%;width:'+dsz+'cqw;height:'+dsz+'cqw;transform:translate(-50%,-50%);border-radius:50%;background:'+(g?'#dcdcdc':isT?'#ffbf00':'#fff')+';'+(isT?'border:.25cqw solid #333;':'')+(isT&&ph==='soon'?'animation:pl 1s steps(1) infinite;':'')+'"></div>'}
 br+='<div class="col" style="position:relative;height:5cqw;background:'+c+'">'+mk_+'</div>';
-const bc=g?'#aaa':LN[s.code].c;
-cr+='<div class="col" style="display:flex;justify-content:center;padding-top:.7cqw"><div style="width:4.6cqw;height:4.6cqw;border-radius:50%;border:.35cqw solid '+bc+';background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;color:'+bc+'"><span style="font-size:1.4cqw;font-weight:500">'+s.code+'</span><span style="font-size:2cqw;font-weight:500">'+String(s.num).padStart(2,'0')+'</span></div></div>';
-xr+='<div class="col" style="display:flex;flex-direction:column;align-items:center;gap:.4cqw;padding-top:.5cqw">'+x.map(q=>'<div style="display:flex;align-items:center;gap:.4cqw;font-size:1.6cqw;white-space:nowrap;color:'+tc+'"><span style="border:.25cqw solid '+LN[q].c+';color:'+LN[q].c+';background:#fff;font-size:1.3cqw;font-weight:500;padding:0 .3cqw;border-radius:.3cqw;line-height:1.3">'+q+'</span>'+LN[q].t[L]+'</div>').join('')+'</div>'});
-const lc=LN[S[cols[cols.length-1]].line].c;
+cr+='<div class="col" style="display:flex;justify-content:center;padding-top:.7cqw">'+(pass?'<div style="padding-top:.5cqw">'+nb(s.code,s.num,3.6,true)+'</div>':nb(s.code,s.num,4.6,g))+'</div>';
+xr+='<div class="col" style="display:flex;flex-direction:column;align-items:center;gap:.4cqw;padding-top:.5cqw;overflow:hidden">'+xfHTML(x,L,g?'#999':'#111')+'</div>'});
+const lc=LN[F[cols[cols.length-1]].s.line].c;
 br+='<div style="width:2.6cqw;height:5cqw;flex-shrink:0;background:'+lc+';clip-path:polygon(0 0,35% 0,100% 50%,35% 100%,0 100%)"></div>';
 if(ph!=='stop'){const cx=3+9.2;br+='<div class="chv" style="left:'+cx+'cqw"></div><div class="chv" style="left:'+(cx+1.3)+'cqw"></div>'}
 $('rb').innerHTML='<div style="display:flex;padding:1.6cqw 0 1cqw 3cqw">'+nr+'</div><div style="display:flex;padding-left:3cqw;position:relative">'+br+'</div><div style="display:flex;padding-left:3cqw">'+cr+'</div><div style="display:flex;padding-left:3cqw">'+xr+'</div>'}
@@ -223,7 +335,7 @@ const mp=$('mp');if(mode==='map'){mp.style.display='block';mp.innerHTML=mapSVG(S
 let msg=[];if(t<last&&S[t+1].line!==tg.line){const nl=LN[S[t+1].line],nt=TY[S[t+1].type];msg.push('この電車は'+tg.t[0]+'から'+nl.t[0]+' '+nt.t[0]+'となります。 From '+tg.t[2]+', this train will run as '+an(nl.t[2])+' '+TYE[S[t+1].type]+'.')}
 if(ph!=='stop'&&t>0){const p=between(S[t-1],tg);if(p.length)msg.push(p.map(x=>x[0]).join('、')+'には止まりません。 This train will not stop at '+eor(p.map(x=>x[2]))+'.')}
 if(t===last&&ph!=='next')msg.push('お忘れ物のないよう、ご注意ください。 Please make sure you have all your belongings with you.');
-if(!msg.length)msg.push('今日も'+ln.t[0]+'をご利用くださいまして、ありがとうございます。 Thank you for '+thx(lg.type)+' the '+ln.t[2]+'.');
+if(!msg.length)msg.push(lg.line==='A'?'本日も中谷交通 青海線をご利用いただきまして、ありがとうございます。 Thank you for using the Aomi Line.':'今日も'+ln.t[0]+'をご利用くださいまして、ありがとうございます。 Thank you for '+thx(lg.type)+' the '+ln.t[2]+'.');
 const tx=msg.join('　　　')+'　　　'+JR;if(tx!==lastTick){lastTick=tx;const tk=$('tick');tk.textContent=tx;tk.style.animation='none';void tk.offsetWidth;tk.style.animation='tk '+Math.round(tx.length*.28)+'s linear infinite'}
 $('dst').textContent=TY[lg.type].t[0]+'　'+d.t[0]+'行き';
 $('stat').textContent={stop:'停車中',next:'走行中',soon:'到着直前'}[ph]+'：'+tg.t[0]+'（'+(t+1)+'/'+(last+1)+'）';
@@ -238,14 +350,17 @@ $('annM').innerHTML=mm?'<div style="font-size:12px;color:var(--sub);margin-top:6
 function clearS(){tmS.forEach(x=>{clearTimeout(x);clearInterval(x)});tmS=[]}
 function setMode(m){mode=m;doorBuilt=false;render()}
 function enter(){clearS();mode='main';doorBuilt=false;mnC=null;
-const MM=ph==='next'?manners(SV[sv].s)[t-1]:null,cards=MM?MCARD[MM===PS?'PS':'SS']:null;
-if(cards){const dur=cards.length>1?4000:5000;const cyc=()=>{tmS.push(setTimeout(()=>{const show=k=>{if(k>=cards.length){mnC=null;setMode('main');cyc();return}mnC=cards[k];setMode('mn');tmS.push(setTimeout(()=>show(k+1),dur))};show(0)},2500))};cyc()}
-else if(ph==='next')tmS.push(setTimeout(()=>{setMode('map');tmS.push(setTimeout(()=>setMode('main'),5000))},3000));
-if(ph==='soon'){const cyc=()=>{tmS.push(setTimeout(()=>{setMode('door');tmS.push(setTimeout(()=>{setMode('main');cyc()},6000))},2500))};cyc()}
+const S=SV[sv].s,hx=xfList(S[t]).length>0,MM=ph==='next'?manners(S)[t-1]:null,cards=MM?MCARD[MM===PS?'PS':'SS']:null;let q=[];
+if(ph==='next'){q=cards?cards.map(c=>['mn',cards.length>1?4000:5000,c]):[['map',5000]];if(hx&&!cards)q.push(['xf',5000])}
+else if(ph==='soon'){q=[['door',6000]];if(hx)q.push(['xf',5000])}
+else q=t===0?[]:[['pf',6000]];
+const gap=ph==='stop'?1500:ph==='next'&&!cards?3000:2500;
+const run=k=>{if(k>=q.length){mnC=null;setMode('main');cyc();return}mnC=q[k][2]||null;setMode(q[k][0]);tmS.push(setTimeout(()=>run(k+1),q[k][1]))};
+const cyc=()=>tmS.push(setTimeout(()=>run(0),gap));if(q.length)cyc();
 render();annUpdate()}
 function fw(){const last=SV[sv].s.length-1;if(ph==='stop'){if(t<last){t++;ph='next'}else if(tmA){t=0}}else if(ph==='next')ph='soon';else ph='stop';enter()}
 function bk(){if(ph==='stop'){if(t>0)ph='soon'}else if(ph==='soon')ph='next';else{t--;ph='stop'}enter()}
-function sched(){tmA=setTimeout(()=>{if(!em)fw();sched()},{stop:5000,next:11000,soon:9500}[ph])}
+function sched(){const S=SV[sv].s,hx=xfList(S[t]).length>0,mc=ph==='next'&&manners(S)[t-1];tmA=setTimeout(()=>{if(!em)fw();sched()},{stop:8000,next:hx&&!mc?14000:11000,soon:hx?14000:9500}[ph])}
 async function keepAwake(on){try{if(on&&'wakeLock' in navigator){wl=await navigator.wakeLock.request('screen')}else if(!on&&wl){await wl.release();wl=null}}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&tmA)keepAwake(true)});
 $('fw').onclick=fw;$('bk').onclick=bk;
